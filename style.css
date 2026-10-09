@@ -43,3 +43,10 @@
 .works-toolbar #photo-count{white-space:nowrap}
 @media(max-width:900px){.works-heading{gap:18px;flex-direction:row}.works-toolbar .filters{gap:10px 22px}}
 @media(max-width:600px){.works-heading{align-items:flex-start;flex-direction:column;padding:16px 44px 16px 0;gap:12px}.works-toolbar .gallery-tools{gap:12px;align-items:flex-start;padding:12px 0 16px}.works-toolbar .filters{gap:8px 18px}.works-toolbar .filter{font-size:13px}}
+
+/* 纪录片沿用栏目折叠与置顶交互；视频尚未发布时保留静态留白。 */
+.documentary-empty{min-height:260px;border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;background:linear-gradient(135deg,#191a18,#111211);color:var(--muted);font-size:14px;letter-spacing:3px}
+.documentary-frame{width:48px;height:32px;border:1px solid #a1a39d70;position:relative}
+.documentary-frame:before,.documentary-frame:after{content:"";position:absolute;left:5px;right:5px;height:1px;background:#a1a39d50}
+.documentary-frame:before{top:5px}.documentary-frame:after{bottom:5px}
+@media(max-width:600px){.header nav{gap:14px;font-size:12px}.documentary-empty{min-height:190px}}
