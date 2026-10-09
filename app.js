@@ -117,7 +117,7 @@
       }
     });
   });
-  document.querySelectorAll('a[href="#works"],a[href="#journal"],a[href="#about"]').forEach(link=>{
+  document.querySelectorAll('a[href="#works"],a[href="#documentaries"],a[href="#journal"],a[href="#about"]').forEach(link=>{
     link.addEventListener('click',()=>{
       const section=document.querySelector(link.getAttribute('href'));
       const button=section?.querySelector('.section-toggle-control');
