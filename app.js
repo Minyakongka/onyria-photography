@@ -125,10 +125,15 @@
   filters.forEach(button=>button.addEventListener('click',()=>selectCategory(button.dataset.filter)));
   const coverPhotos={landscape:'mountains',sunset:'onyria-dsc01023',city:'onyria-city-pano-2',stars:'onyria-stars-dsc07557'};
   const covers=document.getElementById('category-covers');
-  for(const [category,id] of Object.entries(coverPhotos)){
+  const orderedCovers=Object.entries(coverPhotos).sort(([,a],[,b])=>{
+    const pa=siteContent.photos.find(p=>p.id===a),pb=siteContent.photos.find(p=>p.id===b);
+    return Number(pa.width*9>pa.height*16)-Number(pb.width*9>pb.height*16);
+  });
+  for(const [category,id] of orderedCovers){
     const photo=siteContent.photos.find(p=>p.id===id);
     const count=siteContent.photos.filter(p=>p.category===category).length;
     const button=make('button','category-cover');button.type='button';button.dataset.category=category;
+    if(photo.width*9>photo.height*16)button.classList.add('category-cover-wide');
     button.setAttribute('aria-label',`打开${photo.label}，${count}幅影像`);
     const media=make('div','category-cover-image'),img=make('img');
     img.src=photo.src;img.alt=photo.alt;img.width=photo.width;img.height=photo.height;img.loading='lazy';img.decoding='async';media.append(img);
