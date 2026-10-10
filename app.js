@@ -69,6 +69,25 @@
     document.getElementById('photo-next').disabled=photos.length<2;
   }
   function step(direction){const n=filteredPhotos().length;currentIndex=(currentIndex+direction+n)%n;updateLightbox();}
+  function resetFilmPlayers(){
+    document.querySelectorAll('.documentary-card').forEach(card=>{
+      const player=card.querySelector('.documentary-player');
+      player.replaceChildren();player.hidden=true;
+      card.querySelector('.documentary-poster').hidden=false;
+    });
+  }
+  document.querySelectorAll('.documentary-card').forEach(card=>{
+    const poster=card.querySelector('.documentary-poster'),player=card.querySelector('.documentary-player');
+    poster.addEventListener('click',()=>{
+      const iframe=document.createElement('iframe');
+      const url=new URL('https://player.bilibili.com/player.html');
+      url.search=new URLSearchParams({bvid:card.dataset.bvid,p:'1',autoplay:'1',danmaku:'0'}).toString();
+      iframe.src=url.href;iframe.title=`${card.querySelector('h3').textContent} · B站播放器`;
+      iframe.allow='autoplay; fullscreen; picture-in-picture';iframe.allowFullscreen=true;
+      player.replaceChildren(iframe);player.hidden=false;poster.hidden=true;
+      iframe.focus({preventScroll:true});
+    });
+  });
   const panelAnimations=new WeakMap();
   const reducedMotion=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   async function animatePanel(panel,show){
@@ -104,6 +123,7 @@
       if((!expanded&&panel.contains(document.activeElement))||overview.contains(document.activeElement))button.focus({preventScroll:true});
       transitions.push(animatePanel(panel,expanded&&showGallery),animatePanel(overview,expanded&&!showGallery));
     }else{
+      if(section.id==='documentaries'&&!expanded)resetFilmPlayers();
       transitions.push(animatePanel(panel,expanded));
     }
     await Promise.all(transitions);
