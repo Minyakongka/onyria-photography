@@ -50,3 +50,17 @@
 .documentary-frame:before,.documentary-frame:after{content:"";position:absolute;left:5px;right:5px;height:1px;background:#a1a39d50}
 .documentary-frame:before{top:5px}.documentary-frame:after{bottom:5px}
 @media(max-width:600px){.header nav{gap:14px;font-size:12px}.documentary-empty{min-height:190px}}
+
+/* 收起影像后显示分类封面；封面使用原始比例。 */
+.category-covers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px;align-items:start}
+.category-cover{padding:0;background:transparent;text-align:left;display:block;width:100%}
+.category-cover-image{overflow:hidden;background:var(--surface)}
+.category-cover img{width:100%;height:auto;display:block;transition:filter .4s}
+.category-cover:hover img{filter:brightness(1.08)}
+.category-cover-caption{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
+.category-cover-name{font-family:"Songti SC","SimSun",serif;font-size:25px;font-weight:400;letter-spacing:2px}
+.category-cover-count{font-size:12px;color:var(--muted);white-space:nowrap}
+.section-toggle.is-collapsed{margin-bottom:32px}
+.section-content.is-animating{overflow:hidden;will-change:height,opacity}
+@media(max-width:600px){.category-covers{grid-template-columns:1fr;gap:28px}.category-cover-name{font-size:23px}.category-cover-caption{padding:16px 0}}
+@media(prefers-reduced-motion:reduce){.category-cover img{transition:none}}
