@@ -79,5 +79,5 @@
 
 /* 照片栏目展开先显示分类封面，进入分类后显示筛选工具。 */
 .works-toolbar:not(.has-gallery) .gallery-tools{display:none}
-.hero h1{font-size:clamp(64px,8vw,128px);line-height:1.2;letter-spacing:10px}
-@media(max-width:600px){.hero h1{font-size:clamp(48px,12vw,72px);letter-spacing:5px}}
+.hero h1{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong","SimSun",serif;font-weight:400;font-size:clamp(46px,5vw,72px);line-height:1.35;letter-spacing:8px;text-shadow:0 2px 24px #0002}
+@media(max-width:600px){.hero h1{font-size:clamp(36px,9vw,48px);letter-spacing:4px}}
