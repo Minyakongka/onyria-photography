@@ -68,11 +68,11 @@
 .journal-entry{grid-template-columns:55px 1fr 70px}
 @media(max-width:600px){.journal-entry{grid-template-columns:25px 1fr 30px}}
 
-/* 内容区域与首页封面同宽，文字保留少量阅读边距。 */
-.section{width:100%;max-width:none;margin:0;padding-left:0;padding-right:0}
-.section-toggle:not(.works-toolbar){padding-left:clamp(16px,2vw,40px);padding-right:clamp(56px,5vw,80px)}
-.works-heading{padding-left:clamp(16px,2vw,40px);padding-right:clamp(56px,5vw,80px)}
-.works-toolbar .gallery-tools{padding-left:clamp(16px,2vw,40px);padding-right:clamp(16px,2vw,40px)}
-.category-cover-caption{padding-left:clamp(12px,2vw,32px);padding-right:clamp(12px,2vw,32px)}
-.about .about-copy{max-width:none;padding-left:clamp(16px,2vw,40px);padding-right:clamp(16px,2vw,40px)}
-.footer{padding-left:clamp(16px,2vw,40px);padding-right:clamp(16px,2vw,40px)}
+/* 内容区域占页面 80%，左右各留白 10%。 */
+.section{width:80%;max-width:none;margin:0 auto;padding-left:0;padding-right:0}
+.section-toggle:not(.works-toolbar){padding-left:0;padding-right:56px}
+.works-heading{padding-left:0;padding-right:56px}
+.works-toolbar .gallery-tools{padding-left:0;padding-right:0}
+.category-cover-caption{padding-left:0;padding-right:0}
+.about .about-copy{max-width:none;padding-left:0;padding-right:0}
+.footer{width:80%;margin:0 auto;padding-left:0;padding-right:0}
