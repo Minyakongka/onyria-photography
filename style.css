@@ -57,7 +57,7 @@
 .category-cover-image{overflow:hidden;background:var(--surface);aspect-ratio:3 / 2}
 .category-cover img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:filter .4s}
 .category-cover:hover img{filter:brightness(1.08)}
-.category-cover-caption{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
+.category-cover-caption{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;border-bottom:0}
 .category-cover-name{font-family:"Songti SC","SimSun",serif;font-size:25px;font-weight:400;letter-spacing:2px}
 .category-cover-count{font-size:12px;color:var(--muted);white-space:nowrap}
 .section-toggle.is-collapsed{margin-bottom:32px}
@@ -76,3 +76,8 @@
 .category-cover-caption{padding-left:0;padding-right:0}
 .about .about-copy{max-width:none;padding-left:0;padding-right:0}
 .footer{width:80%;margin:0 auto;padding-left:0;padding-right:0}
+
+/* 照片栏目展开先显示分类封面，进入分类后显示筛选工具。 */
+.works-toolbar:not(.has-gallery) .gallery-tools{display:none}
+.hero h1{font-size:clamp(64px,8vw,128px);line-height:1.2;letter-spacing:10px}
+@media(max-width:600px){.hero h1{font-size:clamp(48px,12vw,72px);letter-spacing:5px}}

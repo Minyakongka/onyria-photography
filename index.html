@@ -8,7 +8,7 @@
   <title>Onyria · 摄影集</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111211'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23e7e6df' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23e7e6df'/%3E%3C/svg%3E">
   <link rel="preload" as="image" href="assets/cover-onyria.webp">
-  <link rel="stylesheet" href="style.css?v=20261010-titles-collapsed">
+  <link rel="stylesheet" href="style.css?v=20261010-cover-flow">
 </head>
 <body>
   <a class="skip" href="#works">跳至作品</a>
@@ -20,7 +20,7 @@
     <section class="hero" id="home" aria-labelledby="hero-title">
       <img class="hero-image" src="assets/cover-onyria.webp" alt="星空下的雪山，山顶泛着柔和光芒，流云环绕山体" width="2048" height="1366" fetchpriority="high">
       <div class="hero-shade"></div>
-      <div class="hero-copy"><h1 id="hero-title">无尽山河<span>Onyria</span></h1><p class="hero-line">行走，攀登，记录永恒</p><a class="hero-link" href="#works">浏览作品</a></div>
+      <div class="hero-copy"><h1 id="hero-title">无尽山河</h1><p class="hero-line">行走，攀登，记录永恒</p><a class="hero-link" href="#works">浏览作品</a></div>
       <div class="hero-bottom"><span>以影像，收藏片刻</span><a href="#works" class="scroll-link"><span class="scroll-stroke" aria-hidden="true"></span>向下探索</a><span class="hero-number">01 / 39</span></div>
     </section>
 
@@ -29,7 +29,7 @@
       <div class="section-top works-heading"><div><p class="eyebrow muted">01 · 照片</p><h2 id="works-title">卷上 · 万象凝光</h2></div><button type="button" class="section-toggle-control" aria-expanded="false" aria-controls="works-content" aria-label="展开照片栏目" data-section-label="照片"><svg class="section-chevron" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><path d="m7 10 7 7 7-7M7 4l7 7 7-7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
       <div class="gallery-tools"><div class="filters" role="group" aria-label="作品分类"><button type="button" class="filter active" data-filter="all" aria-pressed="true">全部</button><button type="button" class="filter" data-filter="landscape" aria-pressed="false">云浮岳峙</button><button type="button" class="filter" data-filter="sunset" aria-pressed="false">屹岳断霞</button><button type="button" class="filter" data-filter="city" aria-pressed="false">城市天际线</button><button type="button" class="filter" data-filter="stars" aria-pressed="false">辉光之辰</button></div><span id="photo-count" aria-live="polite">39 幅影像</span></div>
       </div>
-      <div class="section-content" id="works-overview"><div class="category-covers" id="category-covers" aria-label="摄影分类封面"></div></div>
+      <div class="section-content" id="works-overview" hidden inert><div class="category-covers" id="category-covers" aria-label="摄影分类封面"></div></div>
       <div class="section-content" id="works-content" hidden inert>
       <div class="gallery" id="gallery"></div>
       <p class="gallery-note">点击照片，进入全屏观看。</p>
@@ -66,7 +66,7 @@
   </dialog>
 
   <dialog id="article-dialog" class="article-dialog" aria-labelledby="article-title"><div class="article-bar"><span>镜头之外</span><button type="button" class="icon-button" id="article-close" aria-label="关闭随笔"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button></div><article class="article-content"><p id="article-tag" class="eyebrow muted"></p><h2 id="article-title"></h2><div id="article-body"></div><p class="article-sign">Onyria</p></article></dialog>
-  <script src="content.js?v=20261010-titles-collapsed"></script>
-  <script src="app.js?v=20261010-titles-collapsed"></script>
+  <script src="content.js?v=20261010-cover-flow"></script>
+  <script src="app.js?v=20261010-cover-flow"></script>
 </body>
 </html>

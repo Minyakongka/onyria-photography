@@ -90,17 +90,21 @@
     animation.cancel();panelAnimations.delete(panel);
     panel.classList.remove('is-animating');
   }
-  async function setSectionExpanded(button,expanded){
+  async function setSectionExpanded(button,expanded,showGallery=false){
     const section=button.closest('section'),heading=button.closest('.section-toggle');
     button.setAttribute('aria-expanded',String(expanded));
     button.setAttribute('aria-label',`${expanded?'收起':'展开'}${button.dataset.sectionLabel}栏目`);
     heading.classList.toggle('is-collapsed',!expanded);
     const panel=document.getElementById(button.getAttribute('aria-controls'));
-    const transitions=[animatePanel(panel,expanded)];
+    const transitions=[];
     if(section.id==='works'){
       const overview=document.getElementById('works-overview');
-      if(!expanded&&panel.contains(document.activeElement))button.focus({preventScroll:true});
-      transitions.push(animatePanel(overview,!expanded));
+      if(!showGallery)selectionVersion++;
+      heading.classList.toggle('has-gallery',expanded&&showGallery);
+      if((!expanded&&panel.contains(document.activeElement))||overview.contains(document.activeElement))button.focus({preventScroll:true});
+      transitions.push(animatePanel(panel,expanded&&showGallery),animatePanel(overview,expanded&&!showGallery));
+    }else{
+      transitions.push(animatePanel(panel,expanded));
     }
     await Promise.all(transitions);
     if(!expanded&&button.getAttribute('aria-expanded')==='false'&&heading.getBoundingClientRect().top<76){
@@ -115,7 +119,7 @@
     const sectionButton=document.querySelector('#works .section-toggle-control');
     const wasCollapsed=sectionButton.getAttribute('aria-expanded')==='false';
     renderGallery();
-    if(wasCollapsed)await setSectionExpanded(sectionButton,true);
+    await setSectionExpanded(sectionButton,true,true);
     if(version!==selectionVersion)return;
     const toolbar=document.querySelector('.works-toolbar'),content=document.getElementById('works-content');
     const top=window.scrollY+content.getBoundingClientRect().top-76-toolbar.offsetHeight-24;
