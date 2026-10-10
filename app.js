@@ -80,10 +80,11 @@
     const poster=card.querySelector('.documentary-poster'),player=card.querySelector('.documentary-player');
     poster.addEventListener('click',()=>{
       const iframe=document.createElement('iframe');
-      const url=new URL('https://player.bilibili.com/player.html');
-      url.search=new URLSearchParams({bvid:card.dataset.bvid,p:'1',autoplay:'1',danmaku:'0'}).toString();
-      iframe.src=url.href;iframe.title=`${card.querySelector('h3').textContent} · B站播放器`;
-      iframe.allow='autoplay; fullscreen; picture-in-picture';iframe.allowFullscreen=true;
+      const url=new URL(`https://www.youtube.com/embed/${encodeURIComponent(card.dataset.youtubeId)}`);
+      url.search=new URLSearchParams({autoplay:'1',playsinline:'1',rel:'0',controls:'1',fs:'1'}).toString();
+      iframe.src=url.href;iframe.title=`${card.querySelector('h3').textContent} · YouTube播放器`;
+      iframe.allow='autoplay; fullscreen; picture-in-picture; encrypted-media';iframe.allowFullscreen=true;
+      iframe.referrerPolicy='strict-origin-when-cross-origin';
       player.replaceChildren(iframe);player.hidden=false;poster.hidden=true;
       iframe.focus({preventScroll:true});
     });
