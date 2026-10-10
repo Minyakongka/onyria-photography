@@ -64,3 +64,11 @@
 .section-content.is-animating{overflow:hidden;will-change:height,opacity}
 @media(max-width:600px){.category-covers{grid-template-columns:1fr;gap:28px}.category-cover-name{font-size:23px}.category-cover-caption{padding:16px 0}}
 @media(prefers-reduced-motion:reduce){.category-cover img{transition:none}}
+
+/* 仅分类封面裁切：普通封面统一 3:2，宽于 16:9 的横幅独占一行。 */
+.category-cover:not(.category-cover-wide) .category-cover-image{aspect-ratio:3 / 2}
+.category-cover:not(.category-cover-wide) img{height:100%;object-fit:cover;object-position:center}
+.category-cover-wide{grid-column:1 / -1}
+.category-cover-wide img{height:auto;object-fit:contain}
+.journal-entry{grid-template-columns:55px 1fr 70px}
+@media(max-width:600px){.journal-entry{grid-template-columns:25px 1fr 30px}}
