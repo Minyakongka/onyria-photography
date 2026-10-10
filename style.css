@@ -51,24 +51,19 @@
 .documentary-frame:before{top:5px}.documentary-frame:after{bottom:5px}
 @media(max-width:600px){.header nav{gap:14px;font-size:12px}.documentary-empty{min-height:190px}}
 
-/* 收起影像后显示分类封面；封面使用原始比例。 */
+/* 分类封面单独裁切为正方形，作品照片保持原始比例。 */
 .category-covers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px;align-items:start}
 .category-cover{padding:0;background:transparent;text-align:left;display:block;width:100%}
-.category-cover-image{overflow:hidden;background:var(--surface)}
-.category-cover img{width:100%;height:auto;display:block;transition:filter .4s}
+.category-cover-image{overflow:hidden;background:var(--surface);aspect-ratio:1 / 1}
+.category-cover img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:filter .4s}
 .category-cover:hover img{filter:brightness(1.08)}
 .category-cover-caption{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
 .category-cover-name{font-family:"Songti SC","SimSun",serif;font-size:25px;font-weight:400;letter-spacing:2px}
 .category-cover-count{font-size:12px;color:var(--muted);white-space:nowrap}
 .section-toggle.is-collapsed{margin-bottom:32px}
 .section-content.is-animating{overflow:hidden;will-change:height,opacity}
-@media(max-width:600px){.category-covers{grid-template-columns:1fr;gap:28px}.category-cover-name{font-size:23px}.category-cover-caption{padding:16px 0}}
+@media(max-width:600px){.category-covers{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 16px}.category-cover-name{font-size:18px;letter-spacing:1px}.category-cover-caption{padding:14px 0;flex-wrap:wrap;gap:8px}.category-cover-count{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.category-cover img{transition:none}}
 
-/* 仅分类封面裁切：普通封面统一 3:2，宽于 16:9 的横幅独占一行。 */
-.category-cover:not(.category-cover-wide) .category-cover-image{aspect-ratio:3 / 2}
-.category-cover:not(.category-cover-wide) img{height:100%;object-fit:cover;object-position:center}
-.category-cover-wide{grid-column:1 / -1}
-.category-cover-wide img{height:auto;object-fit:contain}
 .journal-entry{grid-template-columns:55px 1fr 70px}
 @media(max-width:600px){.journal-entry{grid-template-columns:25px 1fr 30px}}
