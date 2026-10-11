@@ -367,6 +367,17 @@ const siteContent = {
       "height": 1365
     },
     {
+      "id": "onyria-city-bridge-dusk-pano",
+      "src": "https://onyria-photography.smokymaple16.chatgpt.site/assets/onyria-city-bridge-dusk-pano.jpg",
+      "title": "",
+      "category": "city",
+      "label": "城市天际线",
+      "alt": "暮色与粉紫霞光中的跨河桥梁，河面映照城市灯光与远山",
+      "description": "",
+      "width": 2048,
+      "height": 865
+    },
+    {
       "id": "onyria-stars-dsc00076",
       "src": "assets/onyria-stars-dsc00076.jpg",
       "title": "",

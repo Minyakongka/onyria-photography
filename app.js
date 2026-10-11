@@ -104,7 +104,7 @@
     const media=make('div','category-cover-image'),img=make('img');
     img.src=photo.src;img.alt=photo.alt;img.width=photo.width;img.height=photo.height;img.loading='lazy';img.decoding='async';media.append(img);
     const caption=make('div','category-cover-caption'),copy=make('div','category-cover-copy');
-    copy.append(make('span','category-cover-name',photo.label),make('span','category-cover-count',`${count} 幅影像`));
+    copy.append(make('span','category-cover-name',photo.label),make('span','category-cover-count',String(count)));
     const hint=make('span','category-cover-hint');hint.setAttribute('aria-hidden','true');
     hint.innerHTML='<svg width="23" height="23" viewBox="0 0 24 24" fill="none"><path d="M5 19 19 5M6 5h13v13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     caption.append(copy,hint);media.append(caption);

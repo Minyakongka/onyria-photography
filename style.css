@@ -334,3 +334,6 @@ onyria-logo[variant="vertical"] .onyria-mountain{width:106px;height:61px;margin:
 @media(max-width:1100px){.brand-lockup{gap:18px}.brand-mountain .onyria-mountain{width:70px;height:40px}}
 @media(max-width:600px){.brand-lockup{gap:14px}.brand-mountain .onyria-mountain{width:57px;height:33px}}
 @media(max-width:380px){.brand-lockup{gap:11px}.brand-mountain .onyria-mountain{width:50px;height:29px}}
+
+/* Quiet numeric counts at the lower left of each category cover. */
+.category-cover-count{font-size:13px;font-weight:400;letter-spacing:.1em;font-variant-numeric:tabular-nums;line-height:1.4}
