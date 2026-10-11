@@ -4,7 +4,7 @@
   const filters = [...document.querySelectorAll('.filter')];
   const lightbox = document.getElementById('lightbox');
   const articleDialog = document.getElementById('article-dialog');
-  let currentFilter = 'all', currentIndex = 0, opener = null;
+  let currentFilter = document.body.dataset.category || 'all', currentIndex = 0, opener = null;
   const isFullRow = photo => photo.featured || photo.width * 9 > photo.height * 16;
   function galleryRows(photos){
     const categories=new Map();
@@ -32,6 +32,7 @@
   const lock = () => document.body.classList.add('modal-open');
   const unlock = () => {document.body.classList.remove('modal-open');if(opener?.isConnected)opener.focus();};
   function renderGallery(){
+    if(!gallery)return;
     gallery.replaceChildren();
     const photos = filteredPhotos();
     galleryRows(photos).forEach((row,rowIndex) => row.forEach((photo,columnIndex) => {
@@ -69,13 +70,6 @@
     document.getElementById('photo-next').disabled=photos.length<2;
   }
   function step(direction){const n=filteredPhotos().length;currentIndex=(currentIndex+direction+n)%n;updateLightbox();}
-  function resetFilmPlayers(){
-    document.querySelectorAll('.documentary-card').forEach(card=>{
-      const player=card.querySelector('.documentary-player');
-      player.replaceChildren();player.hidden=true;
-      card.querySelector('.documentary-poster').hidden=false;
-    });
-  }
   document.querySelectorAll('.documentary-card').forEach(card=>{
     const poster=card.querySelector('.documentary-poster'),player=card.querySelector('.documentary-player');
     poster.addEventListener('click',()=>{
@@ -89,72 +83,14 @@
       iframe.focus({preventScroll:true});
     });
   });
-  const panelAnimations=new WeakMap();
   const reducedMotion=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  async function animatePanel(panel,show){
-    const previous=panelAnimations.get(panel);
-    const from=panel.hidden?0:panel.getBoundingClientRect().height;
-    const opacity=panel.hidden?0:Number(getComputedStyle(panel).opacity);
-    if(previous){previous.cancel();panelAnimations.delete(panel);}
-    panel.hidden=false;
-    panel.style.height='';panel.style.opacity='';
-    const to=show?panel.getBoundingClientRect().height:0;
-    panel.inert=!show;
-    if(reducedMotion()||!panel.animate){panel.hidden=!show;panel.classList.remove('is-animating');return;}
-    panel.classList.add('is-animating');
-    const animation=panel.animate([{height:`${from}px`,opacity},{height:`${to}px`,opacity:show?1:0}],{duration:440,easing:'cubic-bezier(.22,1,.36,1)',fill:'both'});
-    panelAnimations.set(panel,animation);
-    try{await animation.finished;}catch{return;}
-    if(panelAnimations.get(panel)!==animation)return;
-    panel.hidden=!show;
-    animation.cancel();panelAnimations.delete(panel);
-    panel.classList.remove('is-animating');
-  }
-  async function setSectionExpanded(button,expanded,showGallery=false){
-    const section=button.closest('section'),heading=button.closest('.section-toggle');
-    button.setAttribute('aria-expanded',String(expanded));
-    button.setAttribute('aria-label',`${expanded?'收起':'展开'}${button.dataset.sectionLabel}栏目`);
-    heading.classList.toggle('is-collapsed',!expanded);
-    const panel=document.getElementById(button.getAttribute('aria-controls'));
-    const transitions=[];
-    if(section.id==='works'){
-      const overview=document.getElementById('works-overview');
-      if(!showGallery)selectionVersion++;
-      heading.classList.toggle('has-gallery',expanded&&showGallery);
-      if((!expanded&&panel.contains(document.activeElement))||overview.contains(document.activeElement))button.focus({preventScroll:true});
-      transitions.push(animatePanel(panel,expanded&&showGallery),animatePanel(overview,expanded&&!showGallery));
-    }else{
-      if(section.id==='documentaries'&&!expanded)resetFilmPlayers();
-      transitions.push(animatePanel(panel,expanded));
-    }
-    await Promise.all(transitions);
-    if(!expanded&&button.getAttribute('aria-expanded')==='false'&&heading.getBoundingClientRect().top<76){
-      window.scrollTo({top:Math.max(0,window.scrollY+section.getBoundingClientRect().top-90),behavior:reducedMotion()?'instant':'smooth'});
-    }
-  }
-  let selectionVersion=0;
-  async function selectCategory(filter){
-    const version=++selectionVersion;
-    currentFilter=filter;
-    filters.forEach(b=>{const active=b.dataset.filter===filter;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
-    const sectionButton=document.querySelector('#works .section-toggle-control');
-    const wasCollapsed=sectionButton.getAttribute('aria-expanded')==='false';
-    renderGallery();
-    await setSectionExpanded(sectionButton,true,true);
-    if(version!==selectionVersion)return;
-    const toolbar=document.querySelector('.works-toolbar'),content=document.getElementById('works-content');
-    const top=window.scrollY+content.getBoundingClientRect().top-76-toolbar.offsetHeight-24;
-    window.scrollTo({top:Math.max(0,top),behavior:reducedMotion()?'instant':'smooth'});
-    if(wasCollapsed)sectionButton.focus({preventScroll:true});
-  }
-  filters.forEach(button=>button.addEventListener('click',()=>selectCategory(button.dataset.filter)));
   const coverPhotos={landscape:'mountains',sunset:'onyria-dsc01023',city:'onyria-city-pano-2',stars:'onyria-stars-dsc07557'};
   const covers=document.getElementById('category-covers');
   const orderedCovers=Object.entries(coverPhotos);
-  for(const [category,id] of orderedCovers){
+  if(covers)for(const [category,id] of orderedCovers){
     const photo=siteContent.photos.find(p=>p.id===id);
     const count=siteContent.photos.filter(p=>p.category===category).length;
-    const button=make('button','category-cover');button.type='button';button.dataset.category=category;
+    const button=make('a','category-cover');button.href=category+'.html';button.dataset.category=category;
     button.setAttribute('aria-label',`打开${photo.label}，${count}幅影像`);
     const media=make('div','category-cover-image'),img=make('img');
     img.src=photo.src;img.alt=photo.alt;img.width=photo.width;img.height=photo.height;img.loading='lazy';img.decoding='async';media.append(img);
@@ -163,7 +99,7 @@
     const hint=make('span','category-cover-hint');hint.setAttribute('aria-hidden','true');
     hint.innerHTML='<svg width="23" height="23" viewBox="0 0 24 24" fill="none"><path d="M5 19 19 5M6 5h13v13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     caption.append(copy,hint);media.append(caption);
-    button.append(media);button.addEventListener('click',()=>selectCategory(category));covers.append(button);
+    button.append(media);covers.append(button);
   }
   document.getElementById('lightbox-close').addEventListener('click',()=>lightbox.close());
   document.getElementById('photo-prev').addEventListener('click',()=>step(-1));
@@ -190,6 +126,7 @@
   // The real content rises over the stationary cover, then hands back to normal scrolling.
   const home=document.getElementById('home'),works=document.getElementById('works');
   const pageContent=document.getElementById('page-content');
+  if(home && works && pageContent){
   const dimmer=make('div','page-turn-dimmer');
   dimmer.setAttribute('aria-hidden','true');home.append(dimmer);
   let turningPage=false,wheelQuietUntil=0,settleTimer=0,touchOrigin=null;
@@ -278,29 +215,13 @@
       const toHome=link.getAttribute('href')==='#home';
       if((toHome&&window.scrollY>4)||(!toHome&&atHome())){
         event.preventDefault();
-        if(!toHome){
-          const button=works.querySelector('.section-toggle-control');
-          if(button.getAttribute('aria-expanded')==='false')await setSectionExpanded(button,true);
-        }
+
         void turnPage(toHome?-1:1);
       }
     });
   });
+  }
   document.getElementById('year').textContent=new Date().getFullYear();
   siteContent.credits.forEach(c=>{const li=make('li'),link=make('a','',c.author),license=make('a','',c.license);link.href=c.url;license.href=c.licenseUrl;for(const a of [link,license]){a.target='_blank';a.rel='noopener noreferrer';}li.append(make('span','',`${c.title} · `),link,make('span','',' · '),license,make('span','','；已缩放并转为 WebP，页面按版式裁切显示。'));document.getElementById('credits-list').append(li);});
-  document.querySelectorAll('.section-toggle-control').forEach(button=>{
-    button.addEventListener('click',()=>setSectionExpanded(button,button.getAttribute('aria-expanded')!=='true'));
-  });
-  document.querySelectorAll('a[href="#works"],a[href="#documentaries"],a[href="#journal"],a[href="#about"]').forEach(link=>{
-    link.addEventListener('click',async e=>{
-      const section=document.querySelector(link.getAttribute('href'));
-      const button=section?.querySelector('.section-toggle-control');
-      if(e.defaultPrevented)return;
-      if(button?.getAttribute('aria-expanded')==='false'){
-        e.preventDefault();await setSectionExpanded(button,true);
-        section.scrollIntoView({behavior:reducedMotion()?'instant':'smooth',block:'start'});
-      }
-    });
-  });
   renderGallery();
 })();

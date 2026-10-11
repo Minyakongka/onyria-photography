@@ -235,3 +235,26 @@ body.is-page-turning .page-content{will-change:transform,filter;pointer-events:n
 @media(max-width:1000px){.onyria-mountain{width:40px;height:32px;margin-right:12px}}
 @media(max-width:600px){.onyria-mountain{width:31px;height:27px;margin-right:7px}.hero-play{width:32px;height:32px;padding:0}}
 @media(max-width:380px){.onyria-mountain{width:27px;height:25px;margin-right:6px}}
+
+/* Always-open exhibition sections and independent collection pages. */
+.works-toolbar{position:static;padding:0;margin-bottom:32px;border:0}
+.overview-tools{justify-content:flex-end;padding-top:18px;margin-bottom:0}
+.collection-section{min-height:100svh;padding-top:150px}
+.collection-page .header{background:var(--header-slate)}
+.collection-back{display:inline-block;font-family:var(--font-cn);font-size:13px;letter-spacing:.12em;margin-bottom:38px;color:var(--muted)}
+.collection-back:hover{color:var(--text)}
+.collection-page .gallery-tools{gap:20px}
+.collection-page .filter{white-space:nowrap}
+.onyria-letter-a{position:relative;display:inline-block;width:.712em;height:.714em;margin-right:.18em;color:transparent;letter-spacing:0;vertical-align:baseline}
+.onyria-letter-a svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;color:var(--brand-white)}
+.onyria-mountain{width:64px;height:48px;margin-right:18px}
+@media(max-width:1000px){.onyria-mountain{width:52px;height:40px;margin-right:12px}}
+@media(max-width:600px){.onyria-mountain{width:40px;height:33px;margin-right:8px}.collection-section{padding-top:115px}.collection-page .gallery-tools{flex-direction:column}.collection-back{margin-bottom:28px}.collection-page .filters{gap:12px 18px}}
+@media(max-width:380px){.onyria-mountain{width:34px;height:29px;margin-right:6px}}
+
+.works-toolbar:not(.has-gallery) .overview-tools{display:flex}
+.about-intro h2{font-size:clamp(28px,3vw,43px);margin-top:16px}
+@media(max-width:600px){.about-intro h2{font-size:29px}}
+
+.onyria-a-source{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.onyria-letter-a svg{position:static;display:block}
