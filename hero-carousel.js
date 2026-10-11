@@ -18,6 +18,7 @@
   secondImage.classList.add('hero-image-inactive');
   firstImage.after(secondImage);
   const layers = [firstImage,secondImage];
+  const imageCache = new Map();
   let current = 0,desired = 0,activeLayer = 0,playing = false,timer = 0,request = 0;
   const homeVisible = () => home.getBoundingClientRect().bottom > window.innerHeight * .5;
   const focalPosition = slide => mobile.matches ? (slide.mobilePosition || slide.position || 'center') : (slide.position || 'center');
@@ -45,13 +46,21 @@
     },8000);
   }
   function loadImage(src) {
-    return new Promise((resolve,reject) => {
+    if (imageCache.has(src)) return imageCache.get(src);
+    const loading = new Promise((resolve,reject) => {
       const image = new Image();
-      image.onload = () => resolve(image);
+      image.decoding = 'async';
+      image.onload = async () => {
+        try {if (image.decode) await image.decode();resolve(image);}
+        catch (error) {reject(error);}
+      };
       image.onerror = () => reject(new Error('Cover could not be loaded'));
       image.src = src;
-      if (image.complete && image.naturalWidth) resolve(image);
+      if (image.complete && image.naturalWidth) image.onload();
     });
+    imageCache.set(src,loading);
+    loading.catch(() => {if (imageCache.get(src) === loading) imageCache.delete(src);});
+    return loading;
   }
   async function select(index) {
     clearTimeout(timer);timer = 0;
@@ -66,6 +75,9 @@
       incoming.width = slide.width || firstImage.width;
       incoming.height = slide.height || firstImage.height;
       incoming.style.objectPosition = focalPosition(slide);
+      // Keep the visible cover until the actual display layer is decoded.
+      if (incoming.decode) await incoming.decode();
+      if (ticket !== request) return;
       incoming.alt = slide.alt || '';
       incoming.removeAttribute('aria-hidden');
       outgoing.alt = '';outgoing.setAttribute('aria-hidden','true');
@@ -105,4 +117,19 @@
   window.addEventListener('pageshow',schedule);
   firstImage.style.objectPosition = focalPosition(slides[0]);
   setCopy(slides[0]);updateControls();
+  // Load one cover at a time after the first cover is visible, sharing work
+  // with manual navigation and retaining decoded images for later cycles.
+  const warmCovers = async () => {
+    try {if (firstImage.decode) await firstImage.decode();} catch {}
+    for (const slide of slides) {
+      if (document.hidden) break;
+      try {await loadImage(slide.src);} catch {}
+    }
+  };
+  const startWarmup = () => {
+    if (window.requestIdleCallback) window.requestIdleCallback(() => void warmCovers(),{timeout:1500});
+    else window.setTimeout(() => void warmCovers(),1000);
+  };
+  if (document.readyState === 'complete') startWarmup();
+  else window.addEventListener('load',startWarmup,{once:true});
 })();
