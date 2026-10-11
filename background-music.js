@@ -57,14 +57,21 @@
     volume=Math.max(0,Math.min(1,Number(slider.value)/100));
     audio.volume=volume;save();update();
   });
+  const options=document.querySelector('.music-options');
+  function closeOutside(event){if(!event.target.closest?.('.music-control')&&options)options.open=false;}
+  document.addEventListener('pointerdown',closeOutside);
+  document.addEventListener('click',closeOutside);
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape'&&options?.open){options.open=false;options.querySelector('summary').focus();}
+  });
   // A film owns the soundtrack until the visitor explicitly restarts the music.
   document.addEventListener('click',event=>{
-    if(event.target.closest?.('.documentary-poster')){pause(true);return;}
+    if(event.target.closest?.('.documentary-poster,.documentary-fullscreen')){pause(true);return;}
     if(event.target.closest?.('.music-control'))return;
     if(wanted&&audio.paused)void play();
   },true);
   document.addEventListener('keydown',event=>{
-    if(event.repeat||!['Enter',' '].includes(event.key)||event.target.closest?.('.music-control,.documentary-poster'))return;
+    if(event.repeat||!['Enter',' '].includes(event.key)||event.target.closest?.('.music-control,.documentary-poster,.documentary-fullscreen'))return;
     if(wanted&&audio.paused)void play();
   });
   document.addEventListener('visibilitychange',()=>{

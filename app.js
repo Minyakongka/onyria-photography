@@ -72,7 +72,8 @@
   function step(direction){const n=filteredPhotos().length;currentIndex=(currentIndex+direction+n)%n;updateLightbox();}
   document.querySelectorAll('.documentary-card').forEach(card=>{
     const poster=card.querySelector('.documentary-poster'),player=card.querySelector('.documentary-player');
-    poster.addEventListener('click',()=>{
+    function startFilm(){
+      if(player.querySelector('iframe'))return;
       const iframe=document.createElement('iframe');
       const url=new URL(`https://www.youtube.com/embed/${encodeURIComponent(card.dataset.youtubeId)}`);
       url.search=new URLSearchParams({autoplay:'1',playsinline:'1',rel:'0',controls:'1',fs:'1'}).toString();
@@ -81,6 +82,14 @@
       iframe.referrerPolicy='strict-origin-when-cross-origin';
       player.replaceChildren(iframe);player.hidden=false;poster.hidden=true;
       iframe.focus({preventScroll:true});
+    }
+    poster.addEventListener('click',startFilm);
+    card.querySelector('.documentary-fullscreen')?.addEventListener('click',()=>{
+      startFilm();
+      const media=card.querySelector('.documentary-media');
+      const fallback=()=>{card.querySelector('.film-status').textContent='可使用播放器右下角的全屏按钮。';};
+      if(!media.requestFullscreen){fallback();return;}
+      try{Promise.resolve(media.requestFullscreen()).catch(fallback);}catch{fallback();}
     });
   });
   const reducedMotion=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
