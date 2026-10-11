@@ -337,3 +337,35 @@ onyria-logo[variant="vertical"] .onyria-mountain{width:106px;height:61px;margin:
 
 /* Quiet numeric counts at the lower left of each category cover. */
 .category-cover-count{font-size:13px;font-weight:400;letter-spacing:.1em;font-variant-numeric:tabular-nums;line-height:1.4}
+
+/* Collection edition: intact compositions on a spacious twelve-column grid. */
+.collection-page .collection-section{padding-left:max(6%,calc((100vw - 1360px)/2));padding-right:max(6%,calc((100vw - 1360px)/2));padding-bottom:110px}
+.collection-page .section-top{margin-bottom:48px}
+.collection-page .gallery-tools{border-top:0;border-bottom:1px solid var(--line);padding:0 0 25px;margin-bottom:65px}
+.collection-page .gallery{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:clamp(14px,2vw,30px);row-gap:clamp(64px,7vw,112px);align-items:center}
+.collection-page .photo-card,.collection-page .photo-card:nth-child(even){min-width:0;margin:0;align-self:center}
+.collection-page .photo-card.photo-offset{margin-top:clamp(32px,5vw,76px)}
+.collection-page .photo-image-button{background:transparent;border-radius:2px;overflow:visible}
+.collection-page .photo-image-button img{width:100%;height:auto;aspect-ratio:auto;object-fit:contain;transform:none;filter:none}
+.collection-page .photo-image-button:hover img{transform:none;filter:none}
+.collection-page .photo-open{right:14px;bottom:14px;border:1px solid #ffffff40;background:#11121180;backdrop-filter:none}
+.photo-folio{display:block;margin-top:15px;font-family:var(--font-meta);font-size:10px;letter-spacing:.22em;color:var(--muted);line-height:1.4;opacity:.7}
+.collection-page .gallery-note{margin-top:80px}
+@media(max-width:900px){
+ .collection-page .collection-section{padding-left:6%;padding-right:6%}
+ .collection-page .gallery{column-gap:18px;row-gap:64px}
+ .collection-page .photo-card.photo-offset{margin-top:32px}
+ .collection-page .gallery-tools{margin-bottom:42px}
+}
+@media(max-width:600px){
+ .collection-page .collection-section{padding-left:6%;padding-right:6%;padding-bottom:75px}
+ .collection-page .section-top{margin-bottom:28px}
+ .collection-page .gallery{grid-template-columns:1fr;gap:48px}
+ .collection-page .photo-card{grid-column:1 / -1!important;grid-row:auto!important}
+ .collection-page .photo-card.photo-offset{margin-top:0}
+ .collection-page .photo-card.photo-portrait{width:82%;justify-self:center}
+ .collection-page .filters{justify-content:center;flex-wrap:wrap}
+ .collection-page .gallery-tools{gap:20px;padding-bottom:20px;margin-bottom:35px}
+ .photo-folio{margin-top:10px;font-size:9px}
+ .collection-page .gallery-note{margin-top:48px}
+}

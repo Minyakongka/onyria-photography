@@ -5,29 +5,45 @@
   const lightbox = document.getElementById('lightbox');
   const articleDialog = document.getElementById('article-dialog');
   let currentFilter = document.body.dataset.category || 'all', currentIndex = 0, opener = null;
-  const isFullRow = photo => photo.featured || photo.width * 9 > photo.height * 16;
-  function galleryRows(photos){
-    const categories=new Map();
-    photos.forEach(photo=>{
-      if(!categories.has(photo.category))categories.set(photo.category,[]);
-      categories.get(photo.category).push(photo);
-    });
-    const rows=[];
-    for(const group of categories.values()){
-      const remaining=[...group.filter(p=>p.featured),...group.filter(p=>!p.featured)];
-      while(remaining.length){
-        const photo=remaining.shift(),row=[photo];
-        if(!isFullRow(photo)){
-          const portrait=photo.height>photo.width;
-          const partner=remaining.findIndex(p=>!isFullRow(p)&&(p.height>p.width)===portrait);
-          if(partner>=0)row.push(remaining.splice(partner,1)[0]);
+  const isPanorama = photo => photo.width / photo.height >= 1.9;
+  const isPortrait = photo => photo.height > photo.width;
+  // Every image keeps its full native aspect ratio. The twelve-column score
+  // changes scale and spacing rather than cropping or changing source files.
+  function galleryLayout(photos) {
+    const entries = [];
+    let row = 1, index = 0;
+    const place = (photo, column, mode, offset = false) => {
+      entries.push({photo, index: index++, row, column, mode, offset});
+    };
+    while (index < photos.length) {
+      const photo = photos[index], following = photos[index + 1];
+      if (index === 0 || photo.featured || isPanorama(photo)) {
+        place(photo, isPortrait(photo) ? '4 / span 6' : '1 / -1',
+          isPanorama(photo) ? 'panorama' : 'opening');
+      } else if (row % 4 === 0 && !isPortrait(photo)) {
+        place(photo, '2 / span 10', 'focus');
+      } else if (following && !following.featured && !isPanorama(following)) {
+        if (isPortrait(photo) && isPortrait(following)) {
+          place(photo, '2 / span 4', 'portrait');
+          place(following, '8 / span 4', 'portrait', true);
+        } else if (isPortrait(photo) || isPortrait(following)) {
+          place(photo, isPortrait(photo) ? '1 / span 4' : '1 / span 7',
+            isPortrait(photo) ? 'portrait' : 'landscape');
+          place(following, isPortrait(following) ? '9 / span 4' : '6 / span 7',
+            isPortrait(following) ? 'portrait' : 'landscape', true);
+        } else {
+          place(photo, '1 / span 5', 'landscape');
+          place(following, '7 / span 6', 'landscape', true);
         }
-        rows.push(row);
+      } else {
+        place(photo, isPortrait(photo) ? '5 / span 5' : '2 / span 10',
+          isPortrait(photo) ? 'portrait' : 'focus');
       }
+      row++;
     }
-    return rows;
+    return entries;
   }
-  const filteredPhotos = () => galleryRows(siteContent.photos.filter(p => currentFilter === 'all' || p.category === currentFilter)).flat();
+  const filteredPhotos = () => siteContent.photos.filter(p => currentFilter === 'all' || p.category === currentFilter);
   const make = (tag, className, text) => { const e = document.createElement(tag); if(className)e.className=className; if(text !== undefined)e.textContent=text; return e; };
   const lock = () => document.body.classList.add('modal-open');
   const unlock = () => {document.body.classList.remove('modal-open');if(opener?.isConnected)opener.focus();};
@@ -35,13 +51,13 @@
     if(!gallery)return;
     gallery.replaceChildren();
     const photos = filteredPhotos();
-    galleryRows(photos).forEach((row,rowIndex) => row.forEach((photo,columnIndex) => {
+    galleryLayout(photos).forEach(({photo,index,row,column,mode,offset}) => {
       const figure = make('figure','photo-card');
-      if(photo.featured)figure.classList.add('photo-featured');
-      if(isFullRow(photo))figure.classList.add('photo-panorama');
-      if(photo.height>photo.width)figure.classList.add('photo-portrait');
-      figure.style.gridRow=String(rowIndex+1);
-      figure.style.gridColumn=isFullRow(photo)?'1 / -1':String(columnIndex+1);
+      figure.classList.add(`photo-${mode}`);
+      if(isPortrait(photo))figure.classList.add('photo-portrait');
+      if(offset)figure.classList.add('photo-offset');
+      figure.style.gridRow=String(row);
+      figure.style.gridColumn=column;
       const button = make('button','photo-image-button');button.type='button';button.setAttribute('aria-label',`放大查看：${photo.title || photo.alt}`);
       const img = make('img');img.src=photo.src;img.alt=photo.alt;img.loading='lazy';img.decoding='async';
       if(photo.width && photo.height){img.width=photo.width;img.height=photo.height;}
@@ -55,8 +71,10 @@
         if(photo.description)info.append(make('p','',photo.description));
         caption.append(info);figure.append(caption);
       }
+      const folio = make('span','photo-folio',String(index+1).padStart(2,'0'));
+      folio.setAttribute('aria-hidden','true');figure.append(folio);
       gallery.append(figure);
-    }));
+    });
     document.getElementById('photo-count').textContent=`${photos.length} 幅影像`;
     if(!photos.length)gallery.append(make('p','empty-message','这个分类暂时还没有作品。'));
   }
