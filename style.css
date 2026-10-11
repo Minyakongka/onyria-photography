@@ -324,3 +324,13 @@ onyria-logo[variant="vertical"] .onyria-mountain{width:92px;height:40px}
 @media(max-width:380px){.onyria-mountain{width:42px;height:25px;margin-right:8px}.header nav{font-size:12px;gap:25px}}
 
 @media(max-width:1100px){.section{padding-top:115px}html{scroll-padding-top:112px}}
+
+/* Independent alpine emblem and typographic wordmark; no shared frame. */
+.brand-lockup{display:flex;align-items:center;gap:26px;flex:none;background:none;border:0;box-shadow:none}
+.brand-mountain{display:flex;align-items:center;justify-content:center;flex:none;color:var(--brand-white);background:none;border:0;padding:0}
+onyria-mountain{display:block;line-height:0}
+.brand-mountain .onyria-mountain{width:96px;height:56px;margin:0;overflow:visible}
+onyria-logo[variant="vertical"] .onyria-mountain{width:106px;height:61px;margin:0}
+@media(max-width:1100px){.brand-lockup{gap:18px}.brand-mountain .onyria-mountain{width:70px;height:40px}}
+@media(max-width:600px){.brand-lockup{gap:14px}.brand-mountain .onyria-mountain{width:57px;height:33px}}
+@media(max-width:380px){.brand-lockup{gap:11px}.brand-mountain .onyria-mountain{width:50px;height:29px}}
