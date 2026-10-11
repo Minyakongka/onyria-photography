@@ -183,6 +183,90 @@
   const header=document.getElementById('header');
   const onScroll=()=>header.classList.toggle('scrolled',window.scrollY>60);
   window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+  // 首页与作品入口按整屏渐隐、渐显切换，相册内部仍可自由滚动。
+  const home=document.getElementById('home'),works=document.getElementById('works');
+  const pageVeil=make('div','page-turn-veil');
+  pageVeil.setAttribute('aria-hidden','true');document.body.append(pageVeil);
+  let turningPage=false,wheelQuietUntil=0,settleTimer=0,touchOrigin=null;
+  const worksTop=()=>window.scrollY+works.getBoundingClientRect().top;
+  const atHome=()=>window.scrollY<worksTop()-4;
+  const atWorksStart=()=>Math.abs(window.scrollY-worksTop())<8;
+  const transitionDirection=delta=>delta>0&&atHome()?1:delta<0&&atWorksStart()?-1:0;
+  const activeDialog=()=>Boolean(document.querySelector('dialog[open]'));
+  async function turnPage(direction){
+    if(turningPage||activeDialog())return;
+    turningPage=true;clearTimeout(settleTimer);
+    const target=direction>0?works:home;
+    const move=()=>{
+      window.scrollTo({top:direction>0?worksTop():0,behavior:'instant'});
+      const hash=direction>0?'#works':'#home';
+      history.replaceState(history.state,'',hash);
+      target.setAttribute('tabindex','-1');target.focus({preventScroll:true});
+    };
+    const animations=[];
+    try{
+      if(reducedMotion()||!pageVeil.animate){move();return;}
+      pageVeil.classList.add('is-turning');
+      const fadeOut=pageVeil.animate([{opacity:0},{opacity:1}],{duration:240,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'});
+      animations.push(fadeOut);await fadeOut.finished;
+      move();
+      const reveal=target.animate([{opacity:.15,transform:'translateY(18px)'},{opacity:1,transform:'translateY(0)'}],{duration:520,easing:'cubic-bezier(.22,1,.36,1)'});
+      const fadeIn=pageVeil.animate([{opacity:1},{opacity:0}],{duration:520,easing:'cubic-bezier(.22,1,.36,1)',fill:'forwards'});
+      animations.push(reveal,fadeIn);await fadeIn.finished;
+    }catch{
+      // 动画被浏览器取消时也保持目标页可见。
+      move();
+    }finally{
+      animations.forEach(animation=>animation.cancel());pageVeil.classList.remove('is-turning');
+      turningPage=false;wheelQuietUntil=performance.now()+180;
+    }
+  }
+  window.addEventListener('wheel',event=>{
+    if(activeDialog()||event.ctrlKey||event.metaKey||Math.abs(event.deltaX)>Math.abs(event.deltaY))return;
+    if(turningPage||performance.now()<wheelQuietUntil){event.preventDefault();return;}
+    if(Math.abs(event.deltaY)<2)return;
+    const direction=transitionDirection(event.deltaY);
+    if(direction){event.preventDefault();void turnPage(direction);}
+  },{passive:false});
+  window.addEventListener('keydown',event=>{
+    if(activeDialog()||event.defaultPrevented||event.altKey||event.ctrlKey||event.metaKey)return;
+    if(event.target.closest?.('input,textarea,select,button,a,[contenteditable="true"]'))return;
+    const down=['ArrowDown','PageDown',' '].includes(event.key)&&!event.shiftKey;
+    const up=['ArrowUp','PageUp'].includes(event.key)||(event.key===' '&&event.shiftKey);
+    const direction=down?transitionDirection(1):up?transitionDirection(-1):0;
+    if(turningPage&&(down||up)){event.preventDefault();return;}
+    if(direction){event.preventDefault();void turnPage(direction);}
+  });
+  window.addEventListener('touchstart',event=>{
+    if(event.touches.length!==1||activeDialog()){touchOrigin=null;return;}
+    touchOrigin={x:event.touches[0].clientX,y:event.touches[0].clientY};
+  },{passive:true});
+  window.addEventListener('touchmove',event=>{
+    if(!touchOrigin||event.touches.length!==1||activeDialog())return;
+    const dx=touchOrigin.x-event.touches[0].clientX,dy=touchOrigin.y-event.touches[0].clientY;
+    if(Math.abs(dy)<24||Math.abs(dx)>Math.abs(dy))return;
+    const direction=transitionDirection(dy);
+    if(turningPage||direction){event.preventDefault();if(!turningPage)void turnPage(direction);}
+  },{passive:false});
+  window.addEventListener('touchend',()=>{touchOrigin=null;},{passive:true});
+  window.addEventListener('touchcancel',()=>{touchOrigin=null;},{passive:true});
+  window.addEventListener('scroll',()=>{
+    clearTimeout(settleTimer);
+    if(turningPage||activeDialog())return;
+    settleTimer=setTimeout(()=>{
+      const top=worksTop(),y=window.scrollY;
+      if(!turningPage&&!activeDialog()&&y>4&&y<top-4)void turnPage(y>=top/2?1:-1);
+    },180);
+  },{passive:true});
+  document.querySelectorAll('a[href="#works"],a[href="#home"]').forEach(link=>{
+    link.addEventListener('click',event=>{
+      if(event.defaultPrevented||activeDialog()||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+      const toHome=link.getAttribute('href')==='#home';
+      if((toHome&&window.scrollY>4)||(!toHome&&atHome())){
+        event.preventDefault();void turnPage(toHome?-1:1);
+      }
+    });
+  });
   document.getElementById('year').textContent=new Date().getFullYear();
   siteContent.credits.forEach(c=>{const li=make('li'),link=make('a','',c.author),license=make('a','',c.license);link.href=c.url;license.href=c.licenseUrl;for(const a of [link,license]){a.target='_blank';a.rel='noopener noreferrer';}li.append(make('span','',`${c.title} · `),link,make('span','',' · '),license,make('span','','；已缩放并转为 WebP，页面按版式裁切显示。'));document.getElementById('credits-list').append(li);});
   document.querySelectorAll('.section-toggle-control').forEach(button=>{
