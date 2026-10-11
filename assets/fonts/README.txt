@@ -1,7 +1,7 @@
 ONYRIA web fonts
 
 Cinzel Regular and Montserrat Light/Regular were obtained from Google Fonts.
-Source Han Serif SC Light/Regular were obtained from Adobe's official repository:
+Source Han Serif SC Light/Regular/SemiBold were obtained from Adobe's official repository:
 https://github.com/adobe-fonts/source-han-serif/tree/release/OTF/SimplifiedChinese
 
 All are licensed under SIL OFL 1.1; original notices are included here.
