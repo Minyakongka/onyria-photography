@@ -5,46 +5,7 @@
   const lightbox = document.getElementById('lightbox');
   const articleDialog = document.getElementById('article-dialog');
   let currentFilter = 'all', currentIndex = 0, opener = null;
-  // 按空间、光线和构图编排；新增作品仍会自动加入所在分类。
-  const sequences = {
-    landscape: [
-      ['wide','mountain-blue'],
-      ['quiet','mountain-mist'],
-      ['pair','mountains','onyria-dsc08677'],
-      ['portraits','mountain-vertical','onyria-dsc08714'],
-      ['wide','onyria-pano-0006'],
-      ['pair','onyria-dji0094','onyria-dsc06994'],
-      ['pair','onyria-dsc06970','onyria-dsc06981'],
-      ['quiet','onyria-flower-foreground'],
-      ['wide','onyria-dsc07007'],
-      ['pair','onyria-dsc00139','onyria-dsc05804'],
-      ['portraits','onyria-dsc08714-variant','onyria-mountain-dsc08809'],
-      ['wide','onyria-dsc00334'],
-      ['quiet','onyria-dsc09176'],
-      ['wide','onyria-pano-0001']
-    ],
-    sunset: [
-      ['wide','onyria-dsc01023'],
-      ['pair','onyria-dji0159','onyria-pano-sunrise'],
-      ['quiet','onyria-dsc06943'],
-      ['pair','onyria-dsc03637','onyria-sunset-dsc03632'],
-      ['wide','onyria-dsc06774'],
-      ['quiet','onyria-dsc06030'],
-      ['pair','onyria-dsc00575-gallery','onyria-dsc06016']
-    ],
-    city: [
-      ['wide','onyria-city-pano-2'],
-      ['quiet','onyria-city-dsc00050'],
-      ['wide','onyria-city-pano-enhanced']
-    ],
-    stars: [
-      ['wide','onyria-stars-milky-way'],
-      ['quiet','onyria-stars-mountain-milky-way'],
-      ['wide','onyria-stars-dsc00421'],
-      ['pair','onyria-stars-dsc00076','onyria-stars-dsc00816'],
-      ['quiet','onyria-stars-dsc07557']
-    ]
-  };
+  const isFullRow = photo => photo.featured || photo.width * 9 > photo.height * 16;
   function galleryRows(photos){
     const categories=new Map();
     photos.forEach(photo=>{
@@ -52,41 +13,34 @@
       categories.get(photo.category).push(photo);
     });
     const rows=[];
-    for(const [category,group] of categories){
-      const remaining=new Map(group.map(photo=>[photo.id,photo]));
-      let first=true;
-      for(const [layout,...ids] of sequences[category] || []){
-        const selected=ids.filter(id=>remaining.has(id)).map(id=>remaining.get(id));
-        if(!selected.length)continue;
-        selected.forEach(photo=>remaining.delete(photo.id));
-        rows.push({photos:selected,layout,category,opening:first});first=false;
-      }
-      for(const photo of remaining.values()){
-        rows.push({photos:[photo],layout:photo.width/photo.height>1.75?'wide':'quiet',category,opening:first});first=false;
+    for(const group of categories.values()){
+      const remaining=[...group.filter(p=>p.featured),...group.filter(p=>!p.featured)];
+      while(remaining.length){
+        const photo=remaining.shift(),row=[photo];
+        if(!isFullRow(photo)){
+          const portrait=photo.height>photo.width;
+          const partner=remaining.findIndex(p=>!isFullRow(p)&&(p.height>p.width)===portrait);
+          if(partner>=0)row.push(remaining.splice(partner,1)[0]);
+        }
+        rows.push(row);
       }
     }
     return rows;
   }
-  const filteredRows = () => galleryRows(siteContent.photos.filter(p => currentFilter === 'all' || p.category === currentFilter));
-  const filteredPhotos = () => filteredRows().flatMap(row=>row.photos);
+  const filteredPhotos = () => galleryRows(siteContent.photos.filter(p => currentFilter === 'all' || p.category === currentFilter)).flat();
   const make = (tag, className, text) => { const e = document.createElement(tag); if(className)e.className=className; if(text !== undefined)e.textContent=text; return e; };
   const lock = () => document.body.classList.add('modal-open');
   const unlock = () => {document.body.classList.remove('modal-open');if(opener?.isConnected)opener.focus();};
   function renderGallery(){
     gallery.replaceChildren();
-    const rows=filteredRows(),photos=rows.flatMap(row=>row.photos);
-    rows.forEach(row => {
-      const spread=make('div',`gallery-row gallery-row-${row.layout}`);
-      if(row.opening){
-        spread.classList.add('gallery-chapter-start');
-        if(currentFilter==='all'){
-          const heading=make('h3','gallery-chapter',row.photos[0].label);
-          heading.id=`chapter-${row.category}`;spread.setAttribute('aria-labelledby',heading.id);spread.append(heading);
-        }
-      }
-      row.photos.forEach(photo => {
+    const photos = filteredPhotos();
+    galleryRows(photos).forEach((row,rowIndex) => row.forEach((photo,columnIndex) => {
       const figure = make('figure','photo-card');
+      if(photo.featured)figure.classList.add('photo-featured');
+      if(isFullRow(photo))figure.classList.add('photo-panorama');
       if(photo.height>photo.width)figure.classList.add('photo-portrait');
+      figure.style.gridRow=String(rowIndex+1);
+      figure.style.gridColumn=isFullRow(photo)?'1 / -1':String(columnIndex+1);
       const button = make('button','photo-image-button');button.type='button';button.setAttribute('aria-label',`放大查看：${photo.title || photo.alt}`);
       const img = make('img');img.src=photo.src;img.alt=photo.alt;img.loading='lazy';img.decoding='async';
       if(photo.width && photo.height){img.width=photo.width;img.height=photo.height;}
@@ -100,10 +54,8 @@
         if(photo.description)info.append(make('p','',photo.description));
         caption.append(info);figure.append(caption);
       }
-      spread.append(figure);
-      });
-      gallery.append(spread);
-    });
+      gallery.append(figure);
+    }));
     document.getElementById('photo-count').textContent=`${photos.length} 幅影像`;
     if(!photos.length)gallery.append(make('p','empty-message','这个分类暂时还没有作品。'));
   }
@@ -191,12 +143,12 @@
     await setSectionExpanded(sectionButton,true,true);
     if(version!==selectionVersion)return;
     const toolbar=document.querySelector('.works-toolbar'),content=document.getElementById('works-content');
-    const top=window.scrollY+content.getBoundingClientRect().top-document.getElementById('header').offsetHeight-toolbar.offsetHeight-24;
+    const top=window.scrollY+content.getBoundingClientRect().top-76-toolbar.offsetHeight-24;
     window.scrollTo({top:Math.max(0,top),behavior:reducedMotion()?'instant':'smooth'});
     if(wasCollapsed)sectionButton.focus({preventScroll:true});
   }
   filters.forEach(button=>button.addEventListener('click',()=>selectCategory(button.dataset.filter)));
-  const coverPhotos={landscape:'mountains',sunset:'onyria-dsc01023',city:'onyria-city-pano-2',stars:'onyria-stars-milky-way'};
+  const coverPhotos={landscape:'mountains',sunset:'onyria-dsc01023',city:'onyria-city-pano-2',stars:'onyria-stars-dsc07557'};
   const covers=document.getElementById('category-covers');
   const orderedCovers=Object.entries(coverPhotos);
   for(const [category,id] of orderedCovers){
@@ -206,7 +158,7 @@
     button.setAttribute('aria-label',`打开${photo.label}，${count}幅影像`);
     const media=make('div','category-cover-image'),img=make('img');
     img.src=photo.src;img.alt=photo.alt;img.width=photo.width;img.height=photo.height;img.loading='lazy';img.decoding='async';media.append(img);
-    const caption=make('div','category-cover-caption');caption.append(make('span','category-cover-name',photo.label),make('span','category-cover-count',`${count} 幅`));
+    const caption=make('div','category-cover-caption');caption.append(make('span','category-cover-name',photo.label),make('span','category-cover-count',`${count} 幅影像`));
     button.append(media,caption);button.addEventListener('click',()=>selectCategory(category));covers.append(button);
   }
   document.getElementById('lightbox-close').addEventListener('click',()=>lightbox.close());
@@ -232,10 +184,6 @@
   const onScroll=()=>header.classList.toggle('scrolled',window.scrollY>60);
   window.addEventListener('scroll',onScroll,{passive:true});onScroll();
   document.getElementById('year').textContent=new Date().getFullYear();
-  if(!siteContent.articles.length){
-    document.getElementById('journal').hidden=true;
-    document.querySelectorAll('a[href="#journal"]').forEach(link=>link.hidden=true);
-  }
   siteContent.credits.forEach(c=>{const li=make('li'),link=make('a','',c.author),license=make('a','',c.license);link.href=c.url;license.href=c.licenseUrl;for(const a of [link,license]){a.target='_blank';a.rel='noopener noreferrer';}li.append(make('span','',`${c.title} · `),link,make('span','',' · '),license,make('span','','；已缩放并转为 WebP，页面按版式裁切显示。'));document.getElementById('credits-list').append(li);});
   document.querySelectorAll('.section-toggle-control').forEach(button=>{
     button.addEventListener('click',()=>setSectionExpanded(button,button.getAttribute('aria-expanded')!=='true'));
