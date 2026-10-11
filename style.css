@@ -258,3 +258,18 @@ body.is-page-turning .page-content{will-change:transform,filter;pointer-events:n
 
 .onyria-a-source{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 .onyria-letter-a svg{position:static;display:block}
+
+/* A quiet, independent soundtrack control, above the cover navigation. */
+.music-control{position:fixed;z-index:25;right:24px;bottom:90px;display:flex;align-items:center;gap:2px;padding:3px;border:1px solid #f2f0e933;border-radius:24px;background:#111a25d9;color:#F2F0E9}
+.music-toggle,.music-options summary{display:flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;border:0;border-radius:50%;background:transparent;color:inherit;cursor:pointer}
+.music-toggle:hover,.music-options summary:hover{background:#f2f0e912}
+.music-options summary{list-style:none;width:29px}
+.music-options summary::-webkit-details-marker{display:none}
+.music-pause,.music-toggle.is-playing .music-note{display:none}
+.music-toggle.is-playing .music-pause{display:block}
+.music-volume-panel{position:absolute;right:0;bottom:calc(100% + 10px);width:174px;padding:16px;border:1px solid #f2f0e933;border-radius:10px;background:#111a25f5;color:#F2F0E9}
+.music-volume-panel label{display:flex;justify-content:space-between;font-family:var(--font-cn);font-size:12px;margin-bottom:12px}
+.music-volume-panel input{display:block;width:100%;height:20px;margin:0;accent-color:#c9c5b7;cursor:pointer}
+.music-control:has(.music-options[open]){border-color:#f2f0e970}
+@media(max-width:600px){.music-control{right:16px;bottom:84px}.music-toggle{width:32px;height:32px}.music-options summary{width:27px}}
+@media(prefers-reduced-motion:reduce){.music-control{transition:none}}
