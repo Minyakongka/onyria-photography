@@ -225,3 +225,13 @@ body.is-page-turning .page-content{will-change:transform,filter;pointer-events:n
 }
 @media(max-width:380px){.hero-controls .hero-number{display:none}.hero-bottom{gap:8px}}
 @media(prefers-reduced-motion:reduce){.hero-image{transition:none}.category-cover-hint{transition:none;transform:none!important}}
+
+
+/* Stronger mountain mark; preserve the existing peak silhouette. */
+.onyria-mountain{width:48px;height:38px;margin-right:18px}
+.hero-play{width:38px;height:38px;padding:0;gap:0;border-radius:50%;background:transparent;border-color:transparent}
+.hero-play-icon,.hero-pause-icon{width:17px;height:17px}
+.hero-play:hover:not(:disabled),.hero-play:focus-visible{background:#11192870;border-color:#f2f0e980}
+@media(max-width:1000px){.onyria-mountain{width:40px;height:32px;margin-right:12px}}
+@media(max-width:600px){.onyria-mountain{width:31px;height:27px;margin-right:7px}.hero-play{width:32px;height:32px;padding:0}}
+@media(max-width:380px){.onyria-mountain{width:27px;height:25px;margin-right:6px}}

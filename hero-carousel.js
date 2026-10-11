@@ -33,7 +33,6 @@
       button.disabled = slides.length < 2;
       button.title = slides.length < 2 ? '当前仅有一张封面' : button.getAttribute('aria-label');
     }
-    play.querySelector('.hero-play-label').textContent = playing ? '暂停' : '自动播放';
     play.classList.toggle('is-playing',playing);
   }
   function schedule() {

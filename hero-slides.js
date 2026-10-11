@@ -10,5 +10,35 @@ window.onyriaHeroSlides = [
     subtitle: '行走，攀登，记录永恒',
     position: '50% 38%',
     mobilePosition: '46% center'
+  },
+  {
+    src: 'assets/cover-cloud-sea-sunset.jpg',
+    alt: '云海上方的霞光与蓝色云层，远处山脊隐入暮色',
+    width: 2047,
+    height: 818,
+    title: '无尽山河',
+    subtitle: '行走，攀登，记录永恒',
+    position: '50% 50%',
+    mobilePosition: '50% center'
+  },
+  {
+    src: 'assets/cover-alpine-meadow.jpg',
+    alt: '阴云下的岩壁与高山草甸，马群散布在金色花海之间',
+    width: 2048,
+    height: 1365,
+    title: '无尽山河',
+    subtitle: '行走，攀登，记录永恒',
+    position: '50% 50%',
+    mobilePosition: '52% center'
+  },
+  {
+    src: 'assets/cover-mountain-dawn.jpg',
+    alt: '粉紫色天空下的陡峭山峰，轻云飘过层叠山脊',
+    width: 2048,
+    height: 1365,
+    title: '无尽山河',
+    subtitle: '行走，攀登，记录永恒',
+    position: '56% 42%',
+    mobilePosition: '56% center'
   }
 ];
