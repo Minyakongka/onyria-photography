@@ -6,14 +6,16 @@
   <meta name="theme-color" content="#111211">
   <meta name="description" content="Onyria 的个人摄影集。观看影像，阅读摄影随笔，记录光影之间的片刻。">
   <title>Onyria · 摄影集</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111211'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23e7e6df' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23e7e6df'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="assets/onyria-mountain.svg">
   <link rel="preload" as="image" href="https://onyria-photography.smokymaple16.chatgpt.site/assets/cover-onyria-42mp.jpg">
-  <link rel="stylesheet" href="style.css?v=20261011-page-turn">
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/cinzel-regular.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/source-han-serif-sc-regular.woff2" crossorigin>
+  <link rel="stylesheet" href="style.css?v=20261011-brand">
 </head>
 <body>
   <a class="skip" href="#works">跳至作品</a>
   <header class="header" id="header">
-    <a class="brand" href="#home" aria-label="Onyria 摄影集首页"><span class="brand-mark" aria-hidden="true"></span>Onyria<span class="brand-sub">摄影集</span></a>
+    <a class="brand" href="#home" aria-label="ONYRIA 摄影集首页"><onyria-logo variant="horizontal" aria-hidden="true"><svg class="onyria-mountain" viewBox="0 0 80 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 48 19 34 25 38 42 5 58 34 64 29 77 48M42 5 39 23 44 19 51 35M19 34 28 42M64 29 58 40" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="onyria-wordmark">ONYRIA</span><span class="onyria-divider"></span><span class="onyria-subtitle">摄影集</span></onyria-logo></a>
     <nav aria-label="主导航"><a href="#works">作品</a><a href="#documentaries">电影</a><a href="#journal">随笔</a><a href="#about">关于</a></nav>
   </header>
   <main>
@@ -24,6 +26,7 @@
       <div class="hero-bottom"><span>以影像，收藏片刻</span><a href="#works" class="scroll-link"><span class="scroll-stroke" aria-hidden="true"></span>向下探索</a><span class="hero-number">01 / 39</span></div>
     </section>
 
+    <div class="page-content" id="page-content">
     <section class="works section" id="works" aria-labelledby="works-title">
       <div class="section-toggle works-toolbar">
       <div class="section-top works-heading"><div><p class="eyebrow muted">01 · 照片</p><h2 id="works-title">卷上 · 万象凝光</h2></div><button type="button" class="section-toggle-control" aria-expanded="true" aria-controls="works-content" aria-label="收起照片栏目" data-section-label="照片"><svg class="section-chevron" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><path d="m7 10 7 7 7-7M7 4l7 7 7-7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
@@ -67,8 +70,9 @@
       <div class="about-copy"><p class="about-lead">用照片留下那些<br>不想匆匆经过的片刻。</p><p>这里是一份持续生长的影像档案，来自一名充满热情的高山摄影师，踏足人迹罕至的高山原野，记录绝美的风景，构思独特的创作。照片之外，也留下一些关于观看与创作的文字。</p><a class="text-link" href="#works">回到作品</a></div>
           </div>
     </section>
+    </div>
   </main>
-  <footer class="footer"><div class="footer-top"><a class="footer-brand" href="#home">Onyria</a><a href="#home">回到顶部</a></div><div class="footer-bottom"><span>© <span id="year">2026</span> Onyria · 摄影集</span></div></footer>
+  <footer class="footer"><div class="footer-top"><a class="footer-brand" href="#home" aria-label="ONYRIA 摄影集首页"><onyria-logo variant="vertical" aria-hidden="true"><svg class="onyria-mountain" viewBox="0 0 80 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 48 19 34 25 38 42 5 58 34 64 29 77 48M42 5 39 23 44 19 51 35M19 34 28 42M64 29 58 40" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="onyria-wordmark">ONYRIA</span><span class="onyria-divider"></span><span class="onyria-subtitle">摄影集</span></onyria-logo></a><a href="#home">回到顶部</a></div><div class="footer-bottom"><span>© <span id="year">2026</span> ONYRIA · 摄影集</span></div></footer>
 
   <dialog id="lightbox" class="lightbox" aria-label="照片全屏查看">
     <div class="lightbox-bar"><span id="lightbox-position"></span><button type="button" class="icon-button" id="lightbox-close" aria-label="关闭照片"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
@@ -77,7 +81,8 @@
   </dialog>
 
   <dialog id="article-dialog" class="article-dialog" aria-labelledby="article-title"><div class="article-bar"><span>镜头之外</span><button type="button" class="icon-button" id="article-close" aria-label="关闭随笔"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button></div><article class="article-content"><p id="article-tag" class="eyebrow muted"></p><h2 id="article-title"></h2><div id="article-body"></div><p class="article-sign">Onyria</p></article></dialog>
-  <script src="content.js?v=20261011-page-turn"></script>
-  <script src="app.js?v=20261011-page-turn"></script>
+  <script src="brand.js?v=20261011-brand"></script>
+  <script src="content.js?v=20261011-brand"></script>
+  <script src="app.js?v=20261011-brand"></script>
 </body>
 </html>

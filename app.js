@@ -183,12 +183,14 @@
   const header=document.getElementById('header');
   const onScroll=()=>header.classList.toggle('scrolled',window.scrollY>60);
   window.addEventListener('scroll',onScroll,{passive:true});onScroll();
-  // 首页与作品入口按整屏渐隐、渐显切换，相册内部仍可自由滚动。
+  // The real content rises over the stationary cover, then hands back to normal scrolling.
   const home=document.getElementById('home'),works=document.getElementById('works');
-  const pageVeil=make('div','page-turn-veil');
-  pageVeil.setAttribute('aria-hidden','true');document.body.append(pageVeil);
+  const pageContent=document.getElementById('page-content');
+  const dimmer=make('div','page-turn-dimmer');
+  dimmer.setAttribute('aria-hidden','true');home.append(dimmer);
   let turningPage=false,wheelQuietUntil=0,settleTimer=0,touchOrigin=null;
-  const worksTop=()=>window.scrollY+works.getBoundingClientRect().top;
+  // offsetTop is unaffected by the temporary animation transform.
+  const worksTop=()=>pageContent.offsetTop;
   const atHome=()=>window.scrollY<worksTop()-4;
   const atWorksStart=()=>Math.abs(window.scrollY-worksTop())<8;
   const transitionDirection=delta=>delta>0&&atHome()?1:delta<0&&atWorksStart()?-1:0;
@@ -196,28 +198,36 @@
   async function turnPage(direction){
     if(turningPage||activeDialog())return;
     turningPage=true;clearTimeout(settleTimer);
-    const target=direction>0?works:home;
+    const target=direction>0?works:home,animations=[];
     const move=()=>{
       window.scrollTo({top:direction>0?worksTop():0,behavior:'instant'});
-      const hash=direction>0?'#works':'#home';
-      history.replaceState(history.state,'',hash);
+      history.replaceState(history.state,'',direction>0?'#works':'#home');
       target.setAttribute('tabindex','-1');target.focus({preventScroll:true});
     };
-    const animations=[];
     try{
-      if(reducedMotion()||!pageVeil.animate){move();return;}
-      pageVeil.classList.add('is-turning');
-      const fadeOut=pageVeil.animate([{opacity:0},{opacity:1}],{duration:240,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'});
-      animations.push(fadeOut);await fadeOut.finished;
-      move();
-      const reveal=target.animate([{opacity:.15,transform:'translateY(18px)'},{opacity:1,transform:'translateY(0)'}],{duration:520,easing:'cubic-bezier(.22,1,.36,1)'});
-      const fadeIn=pageVeil.animate([{opacity:1},{opacity:0}],{duration:520,easing:'cubic-bezier(.22,1,.36,1)',fill:'forwards'});
-      animations.push(reveal,fadeIn);await fadeIn.finished;
+      if(reducedMotion()||!pageContent.animate){move();return;}
+      // Begin at an exact boundary so trackpads, touch and scrollbar settling agree.
+      window.scrollTo({top:direction>0?0:worksTop(),behavior:'instant'});
+      const distance=worksTop();
+      home.style.transform=`translateY(${window.scrollY}px)`;
+      document.body.classList.add('is-page-turning');
+      header.classList.add('scrolled');
+      const down=direction>0;
+      const contentAnimation=pageContent.animate([
+        {transform:'translateY(0)',filter:down?'brightness(.9)':'brightness(1)'},
+        {transform:`translateY(${down?-distance:distance}px)`,filter:down?'brightness(1)':'brightness(.9)'}
+      ],{duration:620,easing:'cubic-bezier(.22,.75,.25,1)',fill:'forwards'});
+      const shadeAnimation=dimmer.animate([{opacity:down ? 0 : .2},{opacity:down ? .2 : 0}],
+        {duration:620,easing:'ease-in-out',fill:'forwards'});
+      animations.push(contentAnimation,shadeAnimation);
+      await contentAnimation.finished;
     }catch{
-      // 动画被浏览器取消时也保持目标页可见。
-      move();
+      // A cancelled animation must still end on a usable page.
     }finally{
-      animations.forEach(animation=>animation.cancel());pageVeil.classList.remove('is-turning');
+      // These synchronous operations happen together before the next paint.
+      animations.forEach(animation=>animation.cancel());
+      home.style.transform='';document.body.classList.remove('is-page-turning');
+      move();onScroll();
       turningPage=false;wheelQuietUntil=performance.now()+180;
     }
   }
@@ -259,11 +269,16 @@
     },180);
   },{passive:true});
   document.querySelectorAll('a[href="#works"],a[href="#home"]').forEach(link=>{
-    link.addEventListener('click',event=>{
+    link.addEventListener('click',async event=>{
       if(event.defaultPrevented||activeDialog()||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
       const toHome=link.getAttribute('href')==='#home';
       if((toHome&&window.scrollY>4)||(!toHome&&atHome())){
-        event.preventDefault();void turnPage(toHome?-1:1);
+        event.preventDefault();
+        if(!toHome){
+          const button=works.querySelector('.section-toggle-control');
+          if(button.getAttribute('aria-expanded')==='false')await setSectionExpanded(button,true);
+        }
+        void turnPage(toHome?-1:1);
       }
     });
   });
@@ -276,6 +291,7 @@
     link.addEventListener('click',async e=>{
       const section=document.querySelector(link.getAttribute('href'));
       const button=section?.querySelector('.section-toggle-control');
+      if(e.defaultPrevented)return;
       if(button?.getAttribute('aria-expanded')==='false'){
         e.preventDefault();await setSectionExpanded(button,true);
         section.scrollIntoView({behavior:reducedMotion()?'instant':'smooth',block:'start'});
