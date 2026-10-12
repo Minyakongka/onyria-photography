@@ -1,0 +1,25 @@
+{
+  "generation": "Built-in image generation; generated still photographs with CSS atmospheric animation and canvas particles",
+  "assets": [
+    {
+      "category": "landscape",
+      "path": "assets/scenes/landscape.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: full-screen cinematic still photograph for a photography portfolio background, wide 16:9 composition at high resolution. A tiny lone backpacker hiking along a rocky alpine ridge beneath an immense, towering, jagged wall of glaciated snow mountains. Cold blue-grey light, solemn monumental mountain scale, realistic sharp ice and rock, low drifting wisps of cloud between deep layered peaks, dramatic restrained atmospheric depth, natural landscape photography, not illustration. The entire mountain range is majestic and imposing, the hiker is very small but visible near the lower right edge on a trail, about 2% of frame height, his pose suggests walking. Keep important environmental detail across the whole frame and particularly both sides, so a translucent photo gallery can sit over the centre. No words, watermark, borders, UI, excessive artificial glow or painterly texture. A single coherent photograph, not a collage."
+    },
+    {
+      "category": "sunset",
+      "path": "assets/scenes/sunset.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: full-screen cinematic still photograph for a photography portfolio background, wide 16:9 at high resolution. A tiny backpacker hiking on a rocky high alpine ridge, surrounded by an immense range of high snow-covered peaks, glowing pink-peach and amber alpenglow at sunset. Warm rose clouds drifting through valleys, magnificent towering snow mountain massifs, dreamy ethereal paradise atmosphere yet absolutely realistic landscape photography, textured ice and rock, balanced warm dusk light and blue-purple mountain shadows. Hiker very small but clearly visible near lower right side on a path, about 2% of frame height, poised mid-step. Keep environmental detail across the whole image and particularly the edges, allowing a translucent photo gallery to overlay the centre. No text, watermark, interface, borders, illustration or fantasy castles. Single photograph, not a collage."
+    },
+    {
+      "category": "city",
+      "path": "assets/scenes/city.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: full-screen cinematic still photograph for a photography portfolio background, wide 16:9 at high resolution. A bustling futuristic megacity street at night, monumental tall skyscrapers rising through atmospheric haze, realistic cyberpunk cityscape with cyan, magenta and subdued amber neon light alternating with deep shadow, illuminated windows, wet street reflections, believable contemporary-futuristic architecture and small distant pedestrian silhouettes. One small lone person walking in the lower right foreground, tiny against the enormous buildings, about 3% frame height. Convey technological futuristic scale and lively urban energy without any giant foreground portrait. Atmospheric photorealistic cinema photography, sophisticated contrast, detailed architectural textures. Lights and rich detail visible at the side edges because a translucent gallery will overlay the centre. No readable lettering, logos, watermark, interface, borders or cartoon elements; single coherent scene."
+    },
+    {
+      "category": "stars",
+      "path": "assets/scenes/stars.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: full-screen cinematic still photograph for a photography portfolio background, wide 16:9 at high resolution. A quiet high alpine campsite beneath a majestic snow mountain range and an enormous star-filled sky, the Milky Way arch and subtle realistic nebula clouds stretching high overhead, astrophotographic look, fine countless stars, dramatic but natural contrast. A small glowing amber tent near the lower right edge with warm interior light, beside it a very small solitary camper gazing up at the cosmos, both tiny relative to the vast environment; tent about 5% frame width, camper about 2% frame height. Towering angular snow peaks in cool midnight blue, immense solitude, peaceful beauty and yearning for the universe. Photograph-like textures, realistic exposure balance, no magical portals, oversized planets, illustration, text, watermark or interface. Important mountains, sky and campsite remain visible toward frame edges because a translucent photography gallery sits in the centre. Single coherent photo, not a collage."
+    }
+  ]
+}

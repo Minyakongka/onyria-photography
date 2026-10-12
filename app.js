@@ -73,6 +73,28 @@ window.initOnyriaPage = () => {
   }
   if (galleryViewport.addEventListener) listen(galleryViewport,'change',renderGallery);
   else if (galleryViewport.addListener) {galleryViewport.addListener(renderGallery);scope.cleanup(()=>galleryViewport.removeListener(renderGallery));}
+  const strip=document.getElementById('filmstrip-track');
+  let stripKey='';
+  function syncFilmstrip(photos){
+    if(!strip)return;
+    const key=photos.map(p=>p.id).join('|');
+    if(key!==stripKey){
+      stripKey=key;strip.replaceChildren();
+      photos.forEach((photo,index)=>{
+        const button=make('button','filmstrip-thumb');button.type='button';
+        button.setAttribute('aria-label',`查看第 ${index+1} 张：${photo.title||photo.alt}`);
+        const img=make('img');img.src='https://onyria-photography.smokymaple16.chatgpt.site/assets/thumbnails/'+photo.id+'.jpg';img.alt='';img.loading='lazy';img.decoding='async';
+        button.append(img,make('span','filmstrip-number',String(index+1).padStart(2,'0')));
+        listen(button,'click',()=>{currentIndex=index;updateLightbox();});strip.append(button);
+      });
+    }
+    [...strip.children].forEach((button,index)=>{
+      button.classList.toggle('is-selected',index===currentIndex);
+      button.setAttribute('aria-current',index===currentIndex?'true':'false');button.tabIndex=index===currentIndex?0:-1;
+    });
+    const selected=strip.children[currentIndex];
+    later(()=>{if(lightbox.open&&selected===strip.children[currentIndex])selected?.scrollIntoView?.({block:'nearest',inline:'center',behavior:'instant'});},0);
+  }
   function updateLightbox(){
     const photos=filteredPhotos(),photo=photos[currentIndex],img=document.getElementById('lightbox-image');
     img.src=photo.src;img.alt=photo.alt;
@@ -81,6 +103,7 @@ window.initOnyriaPage = () => {
     document.getElementById('lightbox-position').textContent=`${String(currentIndex+1).padStart(2,'0')} / ${String(photos.length).padStart(2,'0')}`;
     document.getElementById('photo-prev').disabled=photos.length<2;
     document.getElementById('photo-next').disabled=photos.length<2;
+    syncFilmstrip(photos);
   }
   function step(direction){const n=filteredPhotos().length;currentIndex=(currentIndex+direction+n)%n;updateLightbox();}
   document.querySelectorAll('.documentary-card').forEach(card=>{
@@ -128,6 +151,28 @@ window.initOnyriaPage = () => {
   listen(document.getElementById('photo-next'),'click',()=>step(1));
   listen(lightbox,'keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();step(-1);}if(e.key==='ArrowRight'){e.preventDefault();step(1);}});
   listen(lightbox,'close',unlock);
+  let wheelAmount=0,lastWheel=0,lastStep=-Infinity;
+  listen(lightbox,'wheel',event=>{
+    if(event.ctrlKey)return;
+    event.preventDefault();
+    const now=performance.now();
+    if(now-lastStep<180)return;
+    if(now-lastWheel>160)wheelAmount=0;
+    const scale=event.deltaMode===1?16:event.deltaMode===2?window.innerHeight:1;
+    wheelAmount+=(Math.abs(event.deltaY)>=Math.abs(event.deltaX)?event.deltaY:event.deltaX)*scale;lastWheel=now;
+    if(Math.abs(wheelAmount)>=40){step(wheelAmount>0?1:-1);wheelAmount=0;lastStep=now;}
+  },{passive:false});
+  listen(lightbox,'click',event=>{
+    if(event.target.closest?.('button,a,.lightbox-bar,.lightbox-caption,.lightbox-filmstrip'))return;
+    const img=document.getElementById('lightbox-image'),rect=img.getBoundingClientRect();
+    const width=img.naturalWidth||img.width,height=img.naturalHeight||img.height;
+    if(width&&height){
+      const scale=Math.min(rect.width/width,rect.height/height),paintedWidth=width*scale,paintedHeight=height*scale;
+      const left=rect.left+(rect.width-paintedWidth)/2,top=rect.top+(rect.height-paintedHeight)/2;
+      if(event.clientX>=left&&event.clientX<=left+paintedWidth&&event.clientY>=top&&event.clientY<=top+paintedHeight)return;
+    }
+    lightbox.close();
+  });
   let touchX=null,touchY=null;
   const lightboxImage=document.getElementById('lightbox-image');
   listen(lightboxImage,'touchstart',e=>{touchX=e.changedTouches[0].clientX;touchY=e.changedTouches[0].clientY;},{passive:true});
@@ -247,5 +292,6 @@ window.initOnyriaPage = () => {
   document.getElementById('year').textContent=new Date().getFullYear();
   siteContent.credits.forEach(c=>{const li=make('li'),link=make('a','',c.author),license=make('a','',c.license);link.href=c.url;license.href=c.licenseUrl;for(const a of [link,license]){a.target='_blank';a.rel='noopener noreferrer';}li.append(make('span','',`${c.title} · `),link,make('span','',' · '),license,make('span','','；已缩放并转为 WebP，页面按版式裁切显示。'));document.getElementById('credits-list').append(li);});
   renderGallery();
+  window.initOnyriaScene?.();
 };
 window.initOnyriaPage();

@@ -374,3 +374,61 @@ onyria-logo[variant="vertical"] .onyria-mountain{width:106px;height:61px;margin:
 .site-navigation-status:empty{display:none}
 body.is-navigating{cursor:progress}
 @media(prefers-reduced-motion:reduce){.hero-entry-shade{transition:none;opacity:0!important}}
+
+/* Video chapter: individually framed, quiet charcoal cards. */
+.documentary-list{gap:26px}
+.documentary-card{background:#1c1f23;border:1px solid #ffffff0b;border-radius:16px;padding:28px;gap:30px}
+.documentary-intro{padding:0}.documentary-media{border-radius:10px}
+@media(max-width:600px){.documentary-card{padding:20px;gap:22px;border-radius:13px}}
+
+/* Each generated scene stays anchored to the viewport while the gallery scrolls. */
+.collection-page main{position:relative;isolation:isolate}
+.collection-backdrop{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:#0d1828}
+.scene-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;max-width:none}
+.scene-shade{position:absolute;inset:0;background:linear-gradient(180deg,#06101c4d 0%,#06101c12 40%,#06101c33 100%)}
+.scene-particles{position:absolute;inset:0;width:100%;height:100%}
+.scene-fog{position:absolute;left:-25%;top:22%;width:150%;height:65%;background:radial-gradient(ellipse at 16% 60%,#dbeaff15,transparent 46%),radial-gradient(ellipse at 80% 20%,#c6dce914,transparent 40%);animation:scene-clouds 55s ease-in-out infinite alternate;will-change:transform;mix-blend-mode:screen}
+.scene-light{position:absolute;inset:0;background:radial-gradient(ellipse at 65% 12%,#b6dfff24,transparent 60%);animation:scene-glow 18s ease-in-out infinite alternate;mix-blend-mode:screen}
+.scene-sunset .scene-fog{background:radial-gradient(ellipse at 22% 65%,#ffe8d127,transparent 46%),radial-gradient(ellipse at 82% 30%,#facdba1d,transparent 40%);animation-duration:64s}
+.scene-sunset .scene-light{background:radial-gradient(ellipse at 12% 22%,#ffb4732b,transparent 52%);animation-duration:22s}
+.scene-city .scene-fog{opacity:.45;animation-duration:44s}
+.scene-city .scene-light{background:radial-gradient(ellipse at 15% 30%,#dd42ed24,transparent 38%),radial-gradient(ellipse at 76% 48%,#35d8ee25,transparent 42%);animation-duration:7s}
+.scene-stars .scene-fog{opacity:.22;animation-duration:70s}
+.scene-stars .scene-light{background:radial-gradient(ellipse at 89% 82%,#ffae451c,transparent 19%),radial-gradient(ellipse at 52% 22%,#adcaff16,transparent 45%);animation-duration:12s}
+.collection-backdrop.is-paused *{animation-play-state:paused!important}
+@keyframes scene-clouds{from{transform:translate3d(-3%,0,0)}to{transform:translate3d(4%,-2%,0)}}
+@keyframes scene-glow{from{opacity:.32}to{opacity:.85}}
+.collection-page .collection-section{--text:#F2F0E9;--muted:#d2d7df;--line:#e4eaf233;--accent:#F2F0E9;background:transparent;color:var(--text);color-scheme:dark}
+.collection-page .header{background:#0c1528d9}
+.collection-page .collection-back,.collection-page #photo-count{color:#f2f0e9da}
+.collection-page .gallery-tools{background:#08142299;border:1px solid #ffffff1c;padding:15px 18px;border-radius:8px}
+.collection-page .filter{color:#d9dfe7}.collection-page .filter.active{color:#fff}
+.collection-page .gallery .photo-image-button img{opacity:.90;transition:opacity .25s ease}
+.collection-page .gallery .photo-image-button:hover img,.collection-page .gallery .photo-image-button:focus-visible img{opacity:1}
+.collection-page .photo-folio{color:#e5e9ef;opacity:.8}
+.collection-page .gallery-note{color:#ecf0f5bd}
+.collection-page .footer{background:#0c1422df}
+.scene-toggle{position:fixed;left:22px;bottom:24px;z-index:8;width:40px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid #f2f0e933;border-radius:6px;background:#0d1826c9;color:#F2F0E9}
+.scene-toggle:hover{background:#203148}.scene-play-icon{display:none}.scene-toggle.is-paused .scene-play-icon{display:block}.scene-toggle.is-paused .scene-pause-icon{display:none}
+body.modal-open .scene-toggle{visibility:hidden}
+@media(max-width:600px){.scene-photo{object-position:right center}.scene-toggle{left:14px;bottom:19px;width:34px;height:34px}.collection-page .gallery-tools{padding:13px 12px}}
+@media(prefers-reduced-motion:reduce){.collection-backdrop *{animation:none!important}.collection-page .gallery .photo-image-button img{transition:none}}
+
+/* Full-resolution viewer with a Lightroom-style filmstrip. */
+.lightbox{background:#090c11;color:#F2F0E9;overflow:hidden}
+.lightbox-stage{height:100%;padding:72px 74px 178px}
+.lightbox-stage #lightbox-image{width:100%;height:100%;object-fit:contain;opacity:1;filter:none;max-width:none}
+.lightbox-caption{bottom:129px;left:4%;right:4%;font-size:12px;pointer-events:none}
+.lightbox-filmstrip{position:absolute;bottom:0;left:0;right:0;height:112px;background:#13171e;border-top:1px solid #ffffff14;padding:13px 4% 12px}
+.filmstrip-track{display:flex;gap:9px;height:100%;overflow-x:auto;overflow-y:hidden;align-items:center;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#636873 #161b24}
+.filmstrip-thumb{position:relative;display:flex;align-items:center;justify-content:center;flex:0 0 104px;height:72px;background:#0a0e14;border:1px solid #ffffff24;padding:4px;border-radius:3px;opacity:.58;transition:opacity .18s,border-color .18s}
+.filmstrip-thumb img{width:100%;height:100%;object-fit:contain;opacity:1;filter:none}
+.filmstrip-thumb:hover,.filmstrip-thumb:focus-visible{opacity:1;border-color:#f2f0e97a}
+.filmstrip-thumb.is-selected{border:2px solid #F2F0E9;opacity:1;padding:3px}
+.filmstrip-number{position:absolute;left:6px;bottom:4px;font-family:var(--font-meta);font-size:9px;line-height:1.2;background:#090d14bd;padding:2px 4px;border-radius:2px;color:#F2F0E9}
+.photo-prev,.photo-next{top:calc(50% - 82px);bottom:auto}
+@media(max-width:600px){.lightbox-stage{padding:68px 10px 154px}.lightbox-caption{bottom:113px;left:14px;right:14px}.lightbox-filmstrip{height:98px;padding:10px 12px}.filmstrip-thumb{flex-basis:84px;height:64px}.photo-prev,.photo-next{top:calc(50% - 65px);bottom:auto;width:38px;height:38px;background:#080e18a3}.photo-prev{left:12px;right:auto}.photo-next{right:12px}.lightbox-caption h3{font-size:14px}}
+
+.collection-page .section-top{background:#08142285;border:1px solid #ffffff12;border-radius:10px;padding:22px 18px}
+
+.scene-stars .scene-photo{object-position:right center}
