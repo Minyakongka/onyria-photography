@@ -1,7 +1,17 @@
-(() => {
+window.initOnyriaHero = () => {
+  window.disposeOnyriaHero?.();
+  const scope=window.createOnyriaScope(),listen=scope.listen;
+  window.disposeOnyriaHero=()=>scope.dispose();
   'use strict';
   const home = document.getElementById('home');
+  if(!home)return;
   const firstImage = home.querySelector('.hero-image');
+  const reveal=()=>{if(scope.disposed)return;home.classList.add('is-revealed');window.onyriaHeroRevealed=true;};
+  const beginReveal=()=>requestAnimationFrame(()=>requestAnimationFrame(reveal));
+  if(window.onyriaHeroRevealed||window.matchMedia('(prefers-reduced-motion: reduce)').matches) reveal();
+  else if(firstImage.decode) firstImage.decode().catch(()=>{}).then(beginReveal);
+  else if(firstImage.complete) beginReveal();
+  else {listen(firstImage,'load',beginReveal,{once:true});listen(firstImage,'error',beginReveal,{once:true});}
   const title = document.getElementById('hero-title');
   const subtitle = home.querySelector('.hero-line');
   const previous = document.getElementById('hero-previous');
@@ -20,6 +30,7 @@
   const layers = [firstImage,secondImage];
   const imageCache = new Map();
   let current = 0,desired = 0,activeLayer = 0,playing = false,timer = 0,request = 0;
+  scope.cleanup(()=>{request++;clearTimeout(timer);secondImage.remove();});
   const homeVisible = () => home.getBoundingClientRect().bottom > window.innerHeight * .5;
   const focalPosition = slide => mobile.matches ? (slide.mobilePosition || slide.position || 'center') : (slide.position || 'center');
   function setCopy(slide) {
@@ -39,7 +50,7 @@
   function schedule() {
     clearTimeout(timer);timer = 0;
     if (!playing || slides.length < 2 || document.hidden || !homeVisible() || document.querySelector('dialog[open]')) return;
-    timer = window.setTimeout(() => {
+    timer = scope.later(() => {
       // Do not interrupt the transition from the homepage to the works section.
       if (document.hidden || !homeVisible() || document.querySelector('dialog[open]') || document.body.classList.contains('is-page-turning')) {schedule();return;}
       void select(current+1);
@@ -92,29 +103,29 @@
       updateControls();schedule();
     }
   }
-  previous.addEventListener('click',() => void select(desired-1));
-  next.addEventListener('click',() => void select(desired+1));
-  play.addEventListener('click',() => {
+  listen(previous,'click',() => void select(desired-1));
+  listen(next,'click',() => void select(desired+1));
+  listen(play,'click',() => {
     playing = !playing;
     // Pausing also invalidates an automatic change that is still loading.
     if (!playing) {request++;desired = current;}
     updateControls();schedule();
   });
-  window.addEventListener('keydown',event => {
+  listen(window,'keydown',event => {
     if (event.defaultPrevented || event.ctrlKey || event.altKey || event.metaKey || !homeVisible() || document.querySelector('dialog[open]')) return;
     if (event.target.closest?.('input,textarea,select,[contenteditable="true"]')) return;
     if (slides.length > 1 && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
       event.preventDefault();void select(desired + (event.key === 'ArrowLeft' ? -1 : 1));
     }
   });
-  document.addEventListener('visibilitychange',schedule);
-  document.addEventListener('close',schedule,true);
-  window.addEventListener('scroll',schedule,{passive:true});
+  listen(document,'visibilitychange',schedule);
+  listen(document,'close',schedule,true);
+  listen(window,'scroll',schedule,{passive:true});
   const resize = () => {layers[activeLayer].style.objectPosition = focalPosition(slides[current]);};
-  if (mobile.addEventListener) mobile.addEventListener('change',resize);
-  else if (mobile.addListener) mobile.addListener(resize);
-  window.addEventListener('pagehide',() => {clearTimeout(timer);request++;});
-  window.addEventListener('pageshow',schedule);
+  if (mobile.addEventListener) listen(mobile,'change',resize);
+  else if (mobile.addListener) {mobile.addListener(resize);scope.cleanup(()=>mobile.removeListener(resize));}
+  listen(window,'pagehide',() => {clearTimeout(timer);request++;});
+  listen(window,'pageshow',schedule);
   firstImage.style.objectPosition = focalPosition(slides[0]);
   setCopy(slides[0]);updateControls();
   // Load one cover at a time after the first cover is visible, sharing work
@@ -122,14 +133,15 @@
   const warmCovers = async () => {
     try {if (firstImage.decode) await firstImage.decode();} catch {}
     for (const slide of slides) {
-      if (document.hidden) break;
+      if (document.hidden || scope.disposed) break;
       try {await loadImage(slide.src);} catch {}
     }
   };
   const startWarmup = () => {
-    if (window.requestIdleCallback) window.requestIdleCallback(() => void warmCovers(),{timeout:1500});
-    else window.setTimeout(() => void warmCovers(),1000);
+    if (window.requestIdleCallback) {const idle=window.requestIdleCallback(() => {if(!scope.disposed)void warmCovers();},{timeout:1500});scope.cleanup(()=>window.cancelIdleCallback?.(idle));}
+    else scope.later(() => void warmCovers(),1000);
   };
   if (document.readyState === 'complete') startWarmup();
-  else window.addEventListener('load',startWarmup,{once:true});
-})();
+  else listen(window,'load',startWarmup,{once:true});
+};
+window.initOnyriaHero();

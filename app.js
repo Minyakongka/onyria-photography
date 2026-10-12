@@ -1,4 +1,7 @@
-(() => {
+window.initOnyriaPage = () => {
+  window.disposeOnyriaPage?.();
+  const scope=window.createOnyriaScope(),listen=scope.listen,later=scope.later;
+  window.disposeOnyriaPage=()=>{scope.dispose();document.body.classList.remove('modal-open','is-page-turning');};
   'use strict';
   const gallery = document.getElementById('gallery');
   const filters = [...document.querySelectorAll('.filter')];
@@ -49,9 +52,9 @@
       const button = make('button','photo-image-button');button.type='button';button.setAttribute('aria-label',`放大查看：${photo.title || photo.alt}`);
       const img = make('img');img.src=photo.src;img.alt=photo.alt;img.loading='lazy';img.decoding='async';
       if(photo.width && photo.height){img.width=photo.width;img.height=photo.height;}
-      img.addEventListener('error',()=>{img.classList.add('image-error');},{once:true});
+      listen(img,'error',()=>{img.classList.add('image-error');},{once:true});
       button.append(img,make('span','photo-open','全屏观看'));
-      button.addEventListener('click',()=>{opener=button;currentIndex=photos.indexOf(photo);updateLightbox();lightbox.showModal();lock();});
+      listen(button,'click',()=>{opener=button;currentIndex=photos.indexOf(photo);updateLightbox();lightbox.showModal();lock();});
       figure.append(button);
       if(photo.title || photo.description){
         const caption = make('figcaption','photo-caption'), info = make('div');
@@ -68,8 +71,8 @@
     document.getElementById('photo-count').textContent=`${photos.length} 幅影像`;
     if(!photos.length)gallery.append(make('p','empty-message','这个分类暂时还没有作品。'));
   }
-  if (galleryViewport.addEventListener) galleryViewport.addEventListener('change',renderGallery);
-  else if (galleryViewport.addListener) galleryViewport.addListener(renderGallery);
+  if (galleryViewport.addEventListener) listen(galleryViewport,'change',renderGallery);
+  else if (galleryViewport.addListener) {galleryViewport.addListener(renderGallery);scope.cleanup(()=>galleryViewport.removeListener(renderGallery));}
   function updateLightbox(){
     const photos=filteredPhotos(),photo=photos[currentIndex],img=document.getElementById('lightbox-image');
     img.src=photo.src;img.alt=photo.alt;
@@ -93,8 +96,8 @@
       player.replaceChildren(iframe);player.hidden=false;poster.hidden=true;
       iframe.focus({preventScroll:true});
     }
-    poster.addEventListener('click',startFilm);
-    card.querySelector('.documentary-fullscreen')?.addEventListener('click',()=>{
+    listen(poster,'click',startFilm);
+    listen(card.querySelector('.documentary-fullscreen'),'click',()=>{
       startFilm();
       const media=card.querySelector('.documentary-media');
       const fallback=()=>{card.querySelector('.film-status').textContent='可使用播放器右下角的全屏按钮。';};
@@ -120,28 +123,28 @@
     caption.append(copy,hint);media.append(caption);
     button.append(media);covers.append(button);
   }
-  document.getElementById('lightbox-close').addEventListener('click',()=>lightbox.close());
-  document.getElementById('photo-prev').addEventListener('click',()=>step(-1));
-  document.getElementById('photo-next').addEventListener('click',()=>step(1));
-  lightbox.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();step(-1);}if(e.key==='ArrowRight'){e.preventDefault();step(1);}});
-  lightbox.addEventListener('close',unlock);
+  listen(document.getElementById('lightbox-close'),'click',()=>lightbox.close());
+  listen(document.getElementById('photo-prev'),'click',()=>step(-1));
+  listen(document.getElementById('photo-next'),'click',()=>step(1));
+  listen(lightbox,'keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();step(-1);}if(e.key==='ArrowRight'){e.preventDefault();step(1);}});
+  listen(lightbox,'close',unlock);
   let touchX=null,touchY=null;
   const lightboxImage=document.getElementById('lightbox-image');
-  lightboxImage.addEventListener('touchstart',e=>{touchX=e.changedTouches[0].clientX;touchY=e.changedTouches[0].clientY;},{passive:true});
-  lightboxImage.addEventListener('touchend',e=>{if(touchX===null)return;const dx=e.changedTouches[0].clientX-touchX,dy=e.changedTouches[0].clientY-touchY;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy))step(dx<0?1:-1);touchX=null;},{passive:true});
-  document.querySelectorAll('[data-article]').forEach(button=>button.addEventListener('click',()=>{
+  listen(lightboxImage,'touchstart',e=>{touchX=e.changedTouches[0].clientX;touchY=e.changedTouches[0].clientY;},{passive:true});
+  listen(lightboxImage,'touchend',e=>{if(touchX===null)return;const dx=e.changedTouches[0].clientX-touchX,dy=e.changedTouches[0].clientY-touchY;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy))step(dx<0?1:-1);touchX=null;},{passive:true});
+  document.querySelectorAll('[data-article]').forEach(button=>listen(button,'click',()=>{
     const article=siteContent.articles[Number(button.dataset.article)];opener=button;
     document.getElementById('article-title').textContent=article.title;
     document.getElementById('article-tag').textContent=article.tag;
     document.getElementById('article-body').replaceChildren(...article.paragraphs.map(text=>make('p','',text)));
     articleDialog.showModal();articleDialog.scrollTop=0;lock();
   }));
-  document.getElementById('article-close').addEventListener('click',()=>articleDialog.close());
-  articleDialog.addEventListener('close',unlock);
-  articleDialog.addEventListener('click',e=>{if(e.target===articleDialog){const r=articleDialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)articleDialog.close();}});
+  listen(document.getElementById('article-close'),'click',()=>articleDialog.close());
+  listen(articleDialog,'close',unlock);
+  listen(articleDialog,'click',e=>{if(e.target===articleDialog){const r=articleDialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)articleDialog.close();}});
   const header=document.getElementById('header');
   const onScroll=()=>header.classList.toggle('scrolled',window.scrollY>60);
-  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+  listen(window,'scroll',onScroll,{passive:true});onScroll();
   // The real content rises over the stationary cover, then hands back to normal scrolling.
   const home=document.getElementById('home'),works=document.getElementById('works');
   const pageContent=document.getElementById('page-content');
@@ -173,11 +176,11 @@
       document.body.classList.add('is-page-turning');
       header.classList.add('scrolled');
       const down=direction>0;
-      const contentAnimation=pageContent.animate([
+      const contentAnimation=scope.animate(pageContent,[
         {transform:'translateY(0)',filter:down?'brightness(.9)':'brightness(1)'},
         {transform:`translateY(${down?-distance:distance}px)`,filter:down?'brightness(1)':'brightness(.9)'}
       ],{duration:620,easing:'cubic-bezier(.22,.75,.25,1)',fill:'forwards'});
-      const shadeAnimation=dimmer.animate([{opacity:down ? 0 : .2},{opacity:down ? .2 : 0}],
+      const shadeAnimation=scope.animate(dimmer,[{opacity:down ? 0 : .2},{opacity:down ? .2 : 0}],
         {duration:620,easing:'ease-in-out',fill:'forwards'});
       animations.push(contentAnimation,shadeAnimation);
       await contentAnimation.finished;
@@ -186,19 +189,20 @@
     }finally{
       // These synchronous operations happen together before the next paint.
       animations.forEach(animation=>animation.cancel());
+      if(scope.disposed)return;
       home.style.transform='';document.body.classList.remove('is-page-turning');
       move();onScroll();
       turningPage=false;wheelQuietUntil=performance.now()+180;
     }
   }
-  window.addEventListener('wheel',event=>{
+  listen(window,'wheel',event=>{
     if(activeDialog()||event.ctrlKey||event.metaKey||Math.abs(event.deltaX)>Math.abs(event.deltaY))return;
     if(turningPage||performance.now()<wheelQuietUntil){event.preventDefault();return;}
     if(Math.abs(event.deltaY)<2)return;
     const direction=transitionDirection(event.deltaY);
     if(direction){event.preventDefault();void turnPage(direction);}
   },{passive:false});
-  window.addEventListener('keydown',event=>{
+  listen(window,'keydown',event=>{
     if(activeDialog()||event.defaultPrevented||event.altKey||event.ctrlKey||event.metaKey)return;
     if(event.target.closest?.('input,textarea,select,button,a,[contenteditable="true"]'))return;
     const down=['ArrowDown','PageDown',' '].includes(event.key)&&!event.shiftKey;
@@ -207,29 +211,29 @@
     if(turningPage&&(down||up)){event.preventDefault();return;}
     if(direction){event.preventDefault();void turnPage(direction);}
   });
-  window.addEventListener('touchstart',event=>{
+  listen(window,'touchstart',event=>{
     if(event.touches.length!==1||activeDialog()){touchOrigin=null;return;}
     touchOrigin={x:event.touches[0].clientX,y:event.touches[0].clientY};
   },{passive:true});
-  window.addEventListener('touchmove',event=>{
+  listen(window,'touchmove',event=>{
     if(!touchOrigin||event.touches.length!==1||activeDialog())return;
     const dx=touchOrigin.x-event.touches[0].clientX,dy=touchOrigin.y-event.touches[0].clientY;
     if(Math.abs(dy)<24||Math.abs(dx)>Math.abs(dy))return;
     const direction=transitionDirection(dy);
     if(turningPage||direction){event.preventDefault();if(!turningPage)void turnPage(direction);}
   },{passive:false});
-  window.addEventListener('touchend',()=>{touchOrigin=null;},{passive:true});
-  window.addEventListener('touchcancel',()=>{touchOrigin=null;},{passive:true});
-  window.addEventListener('scroll',()=>{
+  listen(window,'touchend',()=>{touchOrigin=null;},{passive:true});
+  listen(window,'touchcancel',()=>{touchOrigin=null;},{passive:true});
+  listen(window,'scroll',()=>{
     clearTimeout(settleTimer);
     if(turningPage||activeDialog())return;
-    settleTimer=setTimeout(()=>{
+    settleTimer=later(()=>{
       const top=worksTop(),y=window.scrollY;
       if(!turningPage&&!activeDialog()&&y>4&&y<top-4)void turnPage(y>=top/2?1:-1);
     },180);
   },{passive:true});
   document.querySelectorAll('a[href="#works"],a[href="#home"]').forEach(link=>{
-    link.addEventListener('click',async event=>{
+    listen(link,'click',async event=>{
       if(event.defaultPrevented||activeDialog()||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
       const toHome=link.getAttribute('href')==='#home';
       if((toHome&&window.scrollY>4)||(!toHome&&atHome())){
@@ -243,4 +247,5 @@
   document.getElementById('year').textContent=new Date().getFullYear();
   siteContent.credits.forEach(c=>{const li=make('li'),link=make('a','',c.author),license=make('a','',c.license);link.href=c.url;license.href=c.licenseUrl;for(const a of [link,license]){a.target='_blank';a.rel='noopener noreferrer';}li.append(make('span','',`${c.title} · `),link,make('span','',' · '),license,make('span','','；已缩放并转为 WebP，页面按版式裁切显示。'));document.getElementById('credits-list').append(li);});
   renderGallery();
-})();
+};
+window.initOnyriaPage();
