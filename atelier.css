@@ -1,4 +1,14 @@
-.about .about-copy .about-dedication{margin:30px auto 28px;padding-top:24px;border-top:1px solid #88877b40;font-size:clamp(13px,1vw,15px);line-height:2;letter-spacing:.035em;color:#77796e}
+.about .about-intro{display:flex;justify-content:center;align-items:center;width:100%;text-align:center}
+.about .about-intro>div{width:100%}
+.about #about-title{text-align:center}
+.about #about-content{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(36px,6vw,96px);align-items:start}
+.about #about-content .about-copy{grid-column:auto;max-width:none;margin:0;padding:0;text-align:left}
+.about #about-content .about-copy>p,.about #about-content .about-dedication>p{font-size:16px;line-height:2.15;color:#575b54;letter-spacing:.035em}
+.about #about-content .about-dedication{margin:0;padding:0 0 0 clamp(24px,3vw,48px);border-left:1px solid #d9d9d2;text-align:left;min-width:0}
+.about #about-content .about-contact{margin-top:24px}
+.about .about-email{display:inline-block;margin-top:8px;border-bottom:1px solid #a8aea0;color:#30392e;letter-spacing:.02em;overflow-wrap:anywhere}
+.about .about-email:hover,.about .about-email:focus-visible{color:#111211;border-color:currentColor}
+@media(max-width:700px){.about #about-content{grid-template-columns:1fr;gap:32px}.about #about-content .about-dedication{border-left:0;border-top:1px solid #d9d9d2;padding:28px 0 0}}
 
 /* A source label appears beside the music controls without covering the volume panel. */
 .music-credit{position:absolute;right:calc(100% + 14px);bottom:0;width:min(248px,calc(100vw - 132px));padding:12px 15px;border:1px solid #f2f0e925;background:#111820ef;border-radius:7px;color:#f2f0e9;font-family:var(--font-meta),var(--font-cn);font-size:11px;line-height:1.8;visibility:hidden;opacity:0;transform:translateX(4px);transition:opacity .2s,transform .2s,visibility .2s;pointer-events:none;box-shadow:0 4px 18px #0002}
@@ -16,6 +26,10 @@
 .collection-page .section-top{background:none;border:0;padding:18px 0;text-shadow:none}
 .collection-page .gallery-tools{background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:12px 0}
 .collection-page .section-top h2,.collection-page .collection-back{text-shadow:none}
+.collection-page .collection-back,.collection-page .filter,.collection-page #photo-count{color:#41473d}
+.collection-page .filter.active{color:#20261d;font-weight:600}
+.collection-page .filter.active:after{background:#414d3a}
+.collection-page .collection-back:hover,.collection-page .filter:hover,.collection-page .filter:focus-visible{color:#111711}
 .music-next{display:flex;align-items:center;justify-content:center;width:30px;height:34px;border:0;border-radius:50%;padding:0;background:transparent;color:inherit;cursor:pointer}
 .music-next:hover,.music-next:focus-visible{background:#f2f0e912}
 @media(max-width:600px){.music-next{width:28px;height:32px}}
