@@ -102,17 +102,6 @@ const siteContent = {
       "height": 2048
     },
     {
-      "id": "onyria-dsc08714-variant",
-      "src": "assets/onyria-dsc08714-variant.jpg",
-      "title": "",
-      "category": "landscape",
-      "label": "云浮岳峙",
-      "alt": "竖幅云雾雪山与岩壁的另一幅画面",
-      "description": "",
-      "width": 1366,
-      "height": 2048
-    },
-    {
       "id": "onyria-dsc09176",
       "src": "assets/onyria-dsc09176.png",
       "title": "",

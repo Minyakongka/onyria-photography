@@ -143,7 +143,7 @@ window.initOnyriaPage = () => {
     const photo=siteContent.photos.find(p=>p.id===id);
     const count=siteContent.photos.filter(p=>p.category===category).length;
     const button=make('a','category-cover');button.href=category+'.html';button.dataset.category=category;
-    button.style.setProperty('--book-angle',String([-24,-12,14,26][orderedCovers.findIndex(item=>item[0]===category)])+'deg');
+    button.style.setProperty('--book-angle',String([6,2,-2,-6][orderedCovers.findIndex(item=>item[0]===category)])+'deg');
     button.setAttribute('aria-label',`打开${photo.label}，${count}幅影像`);
     const media=make('div','category-cover-image'),img=make('img');
     setPreview(img,photo,'(max-width: 600px) 145px, (min-width: 1567px) 235px, 15vw');img.alt=photo.alt;img.width=photo.width;img.height=photo.height;img.loading='lazy';img.decoding='async';media.append(img);
@@ -154,10 +154,8 @@ window.initOnyriaPage = () => {
     caption.append(copy,hint);media.append(caption);
     const book=make('div','album-book'),spine=make('span','album-spine','ONYRIA'),pages=make('span','album-pages');
     spine.setAttribute('aria-hidden','true');pages.setAttribute('aria-hidden','true');book.append(spine,pages,media);
-    const stand=make('span','exhibition-plinth');stand.setAttribute('aria-hidden','true');
-    for(const face of ['top','front','side'])stand.append(make('span','plinth-'+face));
-    stand.append(make('span','plinth-plaque',String(orderedCovers.findIndex(item=>item[0]===category)+1).padStart(2,'0')));
-    button.append(book,stand);covers.append(button);
+    const rest=make('span','album-rest');rest.setAttribute('aria-hidden','true');
+    button.append(book,rest);covers.append(button);
   }
   listen(document.getElementById('lightbox-close'),'click',()=>lightbox.close());
   listen(document.getElementById('photo-prev'),'click',()=>step(-1));

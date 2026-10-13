@@ -11,7 +11,7 @@ window.initOnyriaMuseum = () => {
   scope.listen(room,'pointermove',event=>{
     if(event.pointerType==='touch'||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
     const rect=room.getBoundingClientRect(),x=(event.clientX-rect.left)/rect.width-.5,y=(event.clientY-rect.top)/rect.height-.5;
-    cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{if(scope.disposed)return;room.style.setProperty('--room-x',`${-y*.55}deg`);room.style.setProperty('--room-y',`${x*.8}deg`);room.style.setProperty('--room-shift',`${x*5}px`);});
+    cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{if(scope.disposed)return;room.style.setProperty('--room-x',`${-y*.25}deg`);room.style.setProperty('--room-y',`${x*.45}deg`);});
   });
   scope.listen(room,'pointerleave',reset);scope.cleanup(()=>cancelAnimationFrame(frame));window.disposeOnyriaMuseum=()=>scope.dispose();
 };
