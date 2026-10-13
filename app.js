@@ -143,19 +143,15 @@ window.initOnyriaPage = () => {
     const photo=siteContent.photos.find(p=>p.id===id);
     const count=siteContent.photos.filter(p=>p.category===category).length;
     const button=make('a','category-cover');button.href=category+'.html';button.dataset.category=category;
-    button.style.setProperty('--panel-angle',String([8,3,-3,-8][orderedCovers.findIndex(item=>item[0]===category)])+'deg');
     button.setAttribute('aria-label',`打开${photo.label}，${count}幅影像`);
     const media=make('div','category-cover-image'),img=make('img');
-    setPreview(img,photo,'(max-width: 600px) 42vw, 20vw');img.alt=photo.alt;img.width=photo.width;img.height=photo.height;img.loading='lazy';img.decoding='async';media.append(img);
+    setPreview(img,photo,'(max-width: 600px) 42vw, (max-width: 900px) 44vw, 29vw');img.alt=photo.alt;img.width=photo.width;img.height=photo.height;img.loading='lazy';img.decoding='async';media.append(img);
     const caption=make('div','category-cover-caption'),copy=make('div','category-cover-copy');
     copy.append(make('span','category-cover-name',photo.label),make('span','category-cover-count',String(count)));
     const hint=make('span','category-cover-hint');hint.setAttribute('aria-hidden','true');
     hint.innerHTML='<svg width="23" height="23" viewBox="0 0 24 24" fill="none"><path d="M5 19 19 5M6 5h13v13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     caption.append(copy,hint);media.append(caption);
-    const panel=make('div','holographic-panel');panel.append(media);
-    const beam=make('span','projection-volume'),emitter=make('span','projection-emitter');
-    beam.setAttribute('aria-hidden','true');emitter.setAttribute('aria-hidden','true');
-    button.append(beam,panel,emitter);covers.append(button);
+    button.append(media);covers.append(button);
   }
   listen(document.getElementById('lightbox-close'),'click',()=>lightbox.close());
   listen(document.getElementById('photo-prev'),'click',()=>step(-1));
@@ -304,6 +300,5 @@ window.initOnyriaPage = () => {
   siteContent.credits.forEach(c=>{const li=make('li'),link=make('a','',c.author),license=make('a','',c.license);link.href=c.url;license.href=c.licenseUrl;for(const a of [link,license]){a.target='_blank';a.rel='noopener noreferrer';}li.append(make('span','',`${c.title} · `),link,make('span','',' · '),license,make('span','','；已缩放并转为 WebP，页面按版式裁切显示。'));document.getElementById('credits-list').append(li);});
   renderGallery();
   window.initOnyriaScene?.();
-  window.initOnyriaMuseum?.();
 };
 window.initOnyriaPage();

@@ -50,21 +50,18 @@
   async function navigate(url,{pop=false,restore=null,source=null}={}){
     const route=routeFor(url);if(!route)return;
     const ticket=++revision;
-    window.onyriaProjection?.cancel();
     if(route===currentRoute){currentURL=url.href;status.textContent='';document.body.classList.remove('is-navigating');positionPage(url,restore);return;}
     status.textContent='';document.body.classList.add('is-navigating');
-    const projection=source?.classList?.contains('category-cover')?window.beginOnyriaProjection?.(source):null;
     try{
-      const [html]=await Promise.all([pageFor(route),projection?.ready]);if(ticket!==revision){projection?.cancel();return;}
+      const html=await pageFor(route);if(ticket!==revision)return;
       const parsed=new DOMParser().parseFromString(html,'text/html');
       // Validate before touching the current page or the history stack.
       if(pageSelectors.some(selector=>!parsed.querySelector(selector)))throw new Error('Incomplete page');
       if(!pop)history.replaceState({...history.state,onyriaScroll:[scrollX,scrollY]},'',location.href);
       replacePage(parsed);
       if(!pop)history.pushState({onyriaScroll:null},'',url.href);
-      currentRoute=route;currentURL=url.href;positionPage(url,restore);void projection?.finish();
+      currentRoute=route;currentURL=url.href;positionPage(url,restore);
     }catch{
-      projection?.cancel();
       if(ticket!==revision)return;
       if(pop)history.replaceState({...history.state},'',currentURL);
       status.textContent='页面暂时无法加载，请再点击一次重试。';
