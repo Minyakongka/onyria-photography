@@ -22,8 +22,8 @@ window.onyriaHeroSlides = [
     mobilePosition: '50% center'
   },
   {
-    src: 'https://onyria-photography.smokymaple16.chatgpt.site/assets/cover-alpine-meadow-27k.jpg',
-    alt: '阴云下的岩壁与高山草甸，马群散布在金色花海之间',
+    src: 'https://onyria-photography.smokymaple16.chatgpt.site/assets/cover-alpine-meadow-dsc00953-27k.jpg',
+    alt: '流云下的高山岩壁与绿色山谷，马群散布在金色花海与草甸之间',
     width: 2704,
     height: 1803,
     title: '丛目日',
