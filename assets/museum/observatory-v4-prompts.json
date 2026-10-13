@@ -1,0 +1,13 @@
+{
+  "mode": "built-in image_gen",
+  "assets": [
+    {
+      "path": "dist/assets/museum/observatory-v4.webp",
+      "prompt": "Use case: stylized-concept. Asset type: wide 16:9 photoreal architectural background plate for an immersive photography exhibition website. Create a refined FUTURISTIC photography gallery, viewer standing inside a monumental quiet contemporary space. Deep graphite brushed metal architecture, softly curved smoked-glass side walls, pale icy-white concealed ceiling light ribbons receding in perspective, a broad dark satin reflective floor and subtle distant atmospheric depth. Front-facing symmetric composition, cinematic high-end architectural photography, physically credible materials, restrained neutral charcoal and silver palette with faint ice blue reflected light. Wide unobstructed central exhibition area with negative space from x=12% to88% and y=32% to76% reserved for four interactive holographic photo panels that will be added separately in HTML. Upper center wall must remain quiet and dark for a real title added later. No exhibits, no pedestals, no panels, no screens, no people, no books, no wooden furniture, no traditional museum ornament, no signage or text. Strong sense of scale and realistic spatial immersion, premium museum installation, avoid neon rainbow, lasers, cheap sci-fi game graphics, excessive bloom. Render wide landscape 16:9."
+    },
+    {
+      "path": "dist/assets/museum/observatory-mobile-v4.webp",
+      "prompt": "Use case: stylized-concept. Asset type: portrait 2:3 architectural background for mobile futuristic photography gallery. Photoreal high-end contemporary futuristic gallery interior, deep graphite brushed metal central wall, very tall clean ceiling with concealed icy-white linear lights, smoked glass side walls, dark satin reflective floor. Viewer standing inside, facing central wall, strict believable perspective, elegant quiet futuristic art museum. Unobstructed dark central area spanning x=7%-93%, y=22%-87% reserved for four holographic photo panels later added in HTML in two columns and two rows. Upper center dark wall for title added later. Depth and immersive realistic materials. Charcoal, silver, restrained cool white. No exhibits, no pedestals, no screens, no people, no books, no signage, no text, no neon rainbow or laser light. Render portrait 2:3."
+    }
+  ]
+}
