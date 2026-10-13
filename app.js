@@ -299,6 +299,5 @@ window.initOnyriaPage = () => {
   document.getElementById('year').textContent=new Date().getFullYear();
   siteContent.credits.forEach(c=>{const li=make('li'),link=make('a','',c.author),license=make('a','',c.license);link.href=c.url;license.href=c.licenseUrl;for(const a of [link,license]){a.target='_blank';a.rel='noopener noreferrer';}li.append(make('span','',`${c.title} · `),link,make('span','',' · '),license,make('span','','；已缩放并转为 WebP，页面按版式裁切显示。'));document.getElementById('credits-list').append(li);});
   renderGallery();
-  window.initOnyriaScene?.();
 };
 window.initOnyriaPage();
