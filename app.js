@@ -11,9 +11,9 @@ window.initOnyriaPage = () => {
   const galleryViewport = window.matchMedia('(max-width: 600px)');
   const aspectRatio = photo => photo.width / photo.height || 1.5;
   // Balance row heights globally. Native aspect ratios determine each width;
-  // the original source and full composition are retained in every preview.
+  // full compositions stay intact in previews; the viewer loads each original.
   function galleryLayout(photos, narrow = false) {
-    const limit = narrow ? 2 : 3, target = narrow ? 2.6 : 3.3;
+    const limit = narrow ? 2 : 5, target = narrow ? 2.9 : 5.6;
     const scores = Array(photos.length + 1).fill(Infinity), choices = [];
     scores[photos.length] = 0;
     for (let index = photos.length - 1; index >= 0; index--) {
@@ -36,6 +36,13 @@ window.initOnyriaPage = () => {
   }
   const filteredPhotos = () => siteContent.photos.filter(p => currentFilter === 'all' || p.category === currentFilter);
   const make = (tag, className, text) => { const e = document.createElement(tag); if(className)e.className=className; if(text !== undefined)e.textContent=text; return e; };
+  const previewRoot='https://onyria-photography.smokymaple16.chatgpt.site/assets/previews/';
+  function setPreview(img,photo,sizes='(max-width: 600px) 46vw, (max-width: 1100px) 27vw, 22vw'){
+    const widthFor=size=>Math.max(1,Math.round(photo.width*Math.min(size/photo.width,size/photo.height,1)));
+    img.src=previewRoot+photo.id+'-960.jpg';
+    img.srcset=`${previewRoot}${photo.id}-480.jpg ${widthFor(480)}w, ${previewRoot}${photo.id}-960.jpg ${widthFor(960)}w`;
+    img.sizes=sizes;
+  }
   const lock = () => document.body.classList.add('modal-open');
   const unlock = () => {document.body.classList.remove('modal-open');if(opener?.isConnected)opener.focus();};
   function renderGallery(){
@@ -50,7 +57,7 @@ window.initOnyriaPage = () => {
       figure.style.setProperty('--photo-ratio',String(ratio));
       if(photo.height>photo.width)figure.classList.add('photo-portrait');
       const button = make('button','photo-image-button');button.type='button';button.setAttribute('aria-label',`放大查看：${photo.title || photo.alt}`);
-      const img = make('img');img.src=photo.src;img.alt=photo.alt;img.loading='lazy';img.decoding='async';
+      const img = make('img');setPreview(img,photo);img.alt=photo.alt;img.loading='lazy';img.decoding='async';
       if(photo.width && photo.height){img.width=photo.width;img.height=photo.height;}
       listen(img,'error',()=>{img.classList.add('image-error');},{once:true});
       button.append(img,make('span','photo-open','全屏观看'));
@@ -136,15 +143,21 @@ window.initOnyriaPage = () => {
     const photo=siteContent.photos.find(p=>p.id===id);
     const count=siteContent.photos.filter(p=>p.category===category).length;
     const button=make('a','category-cover');button.href=category+'.html';button.dataset.category=category;
+    button.style.setProperty('--book-angle',String([-24,-12,14,26][orderedCovers.findIndex(item=>item[0]===category)])+'deg');
     button.setAttribute('aria-label',`打开${photo.label}，${count}幅影像`);
     const media=make('div','category-cover-image'),img=make('img');
-    img.src=photo.src;img.alt=photo.alt;img.width=photo.width;img.height=photo.height;img.loading='lazy';img.decoding='async';media.append(img);
+    setPreview(img,photo,'(max-width: 600px) 145px, (min-width: 1567px) 235px, 15vw');img.alt=photo.alt;img.width=photo.width;img.height=photo.height;img.loading='lazy';img.decoding='async';media.append(img);
     const caption=make('div','category-cover-caption'),copy=make('div','category-cover-copy');
     copy.append(make('span','category-cover-name',photo.label),make('span','category-cover-count',String(count)));
     const hint=make('span','category-cover-hint');hint.setAttribute('aria-hidden','true');
     hint.innerHTML='<svg width="23" height="23" viewBox="0 0 24 24" fill="none"><path d="M5 19 19 5M6 5h13v13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     caption.append(copy,hint);media.append(caption);
-    button.append(media);covers.append(button);
+    const book=make('div','album-book'),spine=make('span','album-spine','ONYRIA'),pages=make('span','album-pages');
+    spine.setAttribute('aria-hidden','true');pages.setAttribute('aria-hidden','true');book.append(spine,pages,media);
+    const stand=make('span','exhibition-plinth');stand.setAttribute('aria-hidden','true');
+    for(const face of ['top','front','side'])stand.append(make('span','plinth-'+face));
+    stand.append(make('span','plinth-plaque',String(orderedCovers.findIndex(item=>item[0]===category)+1).padStart(2,'0')));
+    button.append(book,stand);covers.append(button);
   }
   listen(document.getElementById('lightbox-close'),'click',()=>lightbox.close());
   listen(document.getElementById('photo-prev'),'click',()=>step(-1));
@@ -293,5 +306,6 @@ window.initOnyriaPage = () => {
   siteContent.credits.forEach(c=>{const li=make('li'),link=make('a','',c.author),license=make('a','',c.license);link.href=c.url;license.href=c.licenseUrl;for(const a of [link,license]){a.target='_blank';a.rel='noopener noreferrer';}li.append(make('span','',`${c.title} · `),link,make('span','',' · '),license,make('span','','；已缩放并转为 WebP，页面按版式裁切显示。'));document.getElementById('credits-list').append(li);});
   renderGallery();
   window.initOnyriaScene?.();
+  window.initOnyriaMuseum?.();
 };
 window.initOnyriaPage();

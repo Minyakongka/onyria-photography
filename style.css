@@ -432,3 +432,33 @@ body.modal-open .scene-toggle{visibility:hidden}
 .collection-page .section-top{background:#08142285;border:1px solid #ffffff12;border-radius:10px;padding:22px 18px}
 
 .scene-stars .scene-photo{object-position:right center}
+
+.scene-details{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.collection-backdrop .scene-fog{background:url('https://onyria-photography.smokymaple16.chatgpt.site/assets/scenes/cloud-wisp.webp') center/contain no-repeat;width:145%;height:54%;left:-22%;top:34%;opacity:.13;filter:grayscale(1);animation-duration:52s}
+.scene-sunset .scene-fog{opacity:.17;filter:grayscale(1) sepia(.2);animation-duration:60s}
+.scene-city .scene-fog{opacity:.05;top:19%;animation-duration:62s}
+.scene-stars .scene-fog{opacity:.035;top:50%;animation-duration:80s}
+
+/* Projected exhibition entry; the page itself never moves the fixed scenery. */
+.projection-transition{position:fixed;inset:0;z-index:80;pointer-events:none;overflow:hidden}
+.projection-art{position:fixed;transform-origin:0 0;background:#0b141f;border:1px solid #d8eaf06b;box-shadow:0 0 28px #b6d9e318;overflow:hidden}
+.projection-art img{width:100%;height:100%;object-fit:contain;opacity:.95}
+.projection-art:after{content:'';position:absolute;inset:-30% 0;background:linear-gradient(transparent 46%,#e1f5ff37 49%,#e1f5ff12 51%,transparent 54%);animation:projection-sweep .65s ease-out both;pointer-events:none}
+@keyframes projection-sweep{from{transform:translateY(-55%)}to{transform:translateY(55%)}}
+.holographic-gallery{animation:hologram-arrive .65s ease-out both}
+@keyframes hologram-arrive{from{opacity:.28}to{opacity:1}}
+.hologram-grid,.hologram-scan,.hologram-border,.hologram-emitter{position:absolute;pointer-events:none}
+.hologram-grid{inset:0;background:repeating-linear-gradient(0deg,#dbefff0b 0 1px,transparent 1px 5px);opacity:.6}
+.hologram-scan{inset:-30% 0;background:linear-gradient(transparent 48%,#c3e8fa18 50%,transparent 52%);animation:hologram-scan 15s linear infinite}
+@keyframes hologram-scan{from{transform:translateY(-45%)}to{transform:translateY(45%)}}
+.hologram-border{inset:108px 18px 18px;border:1px solid #d1e6ef25;box-shadow:inset 0 0 35px #b6d9e310}
+.hologram-border:before,.hologram-border:after{content:'';position:absolute;width:44px;height:26px;border:1px solid #d8edf370}
+.hologram-border:before{left:-1px;top:-1px;border-right:0;border-bottom:0}.hologram-border:after{right:-1px;bottom:-1px;border-left:0;border-top:0}
+.hologram-emitter{bottom:-2px;left:calc(50% - 120px);width:240px;height:5px;border-radius:50%;background:#e1eef350;box-shadow:0 -8px 38px #d7edf030}
+.scene-hologram-label{position:absolute;bottom:72px;left:23px;font-family:var(--font-cn);font-size:10px;letter-spacing:.2em;color:#edf4f9a6}
+.collection-page .gallery{gap:13px}.collection-page .gallery-spread{gap:11px}
+.collection-page .gallery .photo-image-button img{opacity:.72;filter:brightness(.82);transition:opacity .22s,filter .22s}
+.collection-page .gallery .photo-image-button:hover img,.collection-page .gallery .photo-image-button:focus-visible img{opacity:1;filter:brightness(1)}
+.collection-page .photo-folio{margin-top:5px;font-size:8px}
+@media(max-width:600px){.collection-page .gallery{gap:11px}.collection-page .gallery-spread{gap:8px}.hologram-border{inset:108px 10px 12px}.scene-hologram-label{left:14px;bottom:62px;font-size:9px}}
+@media(prefers-reduced-motion:reduce){#works .category-covers{transform:none;transition:none}.album-book{transition:none!important}.holographic-gallery,.hologram-scan,.projection-art:after{animation:none!important}}

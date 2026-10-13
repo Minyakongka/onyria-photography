@@ -23,6 +23,7 @@
     });
     pages.set(route,promise);promise.catch(()=>{if(pages.get(route)===promise)pages.delete(route);});return promise;
   }
+  window.preloadOnyriaCollection=route=>{if(routes.has(route))void pageFor(route).catch(()=>{});};
   const pageSelectors=['.skip','#header','main','footer','#lightbox','#article-dialog'];
   function replacePage(parsed){
     // Audio and its controls are deliberately outside these page fragments.
@@ -46,21 +47,24 @@
       const main=document.querySelector('main');main.setAttribute('tabindex','-1');main.focus({preventScroll:true});
     }));
   }
-  async function navigate(url,{pop=false,restore=null}={}){
+  async function navigate(url,{pop=false,restore=null,source=null}={}){
     const route=routeFor(url);if(!route)return;
     const ticket=++revision;
+    window.onyriaProjection?.cancel();
     if(route===currentRoute){currentURL=url.href;status.textContent='';document.body.classList.remove('is-navigating');positionPage(url,restore);return;}
     status.textContent='';document.body.classList.add('is-navigating');
+    const projection=source?.classList?.contains('category-cover')?window.beginOnyriaProjection?.(source):null;
     try{
-      const html=await pageFor(route);if(ticket!==revision)return;
+      const [html]=await Promise.all([pageFor(route),projection?.ready]);if(ticket!==revision){projection?.cancel();return;}
       const parsed=new DOMParser().parseFromString(html,'text/html');
       // Validate before touching the current page or the history stack.
       if(pageSelectors.some(selector=>!parsed.querySelector(selector)))throw new Error('Incomplete page');
       if(!pop)history.replaceState({...history.state,onyriaScroll:[scrollX,scrollY]},'',location.href);
       replacePage(parsed);
       if(!pop)history.pushState({onyriaScroll:null},'',url.href);
-      currentRoute=route;currentURL=url.href;positionPage(url,restore);
+      currentRoute=route;currentURL=url.href;positionPage(url,restore);void projection?.finish();
     }catch{
+      projection?.cancel();
       if(ticket!==revision)return;
       if(pop)history.replaceState({...history.state},'',currentURL);
       status.textContent='页面暂时无法加载，请再点击一次重试。';
@@ -73,7 +77,7 @@
     const url=new URL(link.href,location.href),route=routeFor(url);
     if(!route)return;
     if(route===currentRoute&&url.pathname===location.pathname)return;
-    event.preventDefault();void navigate(url);
+    event.preventDefault();void navigate(url,{source:link});
   });
   window.addEventListener('popstate',event=>void navigate(new URL(location.href),{pop:true,restore:event.state?.onyriaScroll||null}));
   window.addEventListener('hashchange',()=>{if(routeFor(new URL(location.href))===currentRoute)currentURL=location.href;});

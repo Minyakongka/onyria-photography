@@ -19,7 +19,6 @@
     toggle.classList.toggle('is-playing',playing);
     toggle.setAttribute('aria-pressed',String(playing));
     toggle.setAttribute('aria-label',playing?'暂停背景音乐':'播放背景音乐');
-    toggle.title=playing?'暂停背景音乐 · Resilience':'播放背景音乐 · Resilience';
     value.textContent=`${Math.round(volume*100)}%`;
     slider.setAttribute('aria-valuetext',`${Math.round(volume*100)}%`);
   }

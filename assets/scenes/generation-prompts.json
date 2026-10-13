@@ -1,5 +1,5 @@
 {
-  "generation": "Built-in image generation; generated still photographs with CSS atmospheric animation and canvas particles",
+  "generation": "Built-in image generation; generated still photographs and transparent cloud/vehicle assets, animated with CSS and localized canvas motion",
   "assets": [
     {
       "category": "landscape",
@@ -20,6 +20,16 @@
       "category": "stars",
       "path": "assets/scenes/stars.jpg",
       "prompt": "Use case: photorealistic-natural. Asset type: full-screen cinematic still photograph for a photography portfolio background, wide 16:9 at high resolution. A quiet high alpine campsite beneath a majestic snow mountain range and an enormous star-filled sky, the Milky Way arch and subtle realistic nebula clouds stretching high overhead, astrophotographic look, fine countless stars, dramatic but natural contrast. A small glowing amber tent near the lower right edge with warm interior light, beside it a very small solitary camper gazing up at the cosmos, both tiny relative to the vast environment; tent about 5% frame width, camper about 2% frame height. Towering angular snow peaks in cool midnight blue, immense solitude, peaceful beauty and yearning for the universe. Photograph-like textures, realistic exposure balance, no magical portals, oversized planets, illustration, text, watermark or interface. Important mountains, sky and campsite remain visible toward frame edges because a translucent photography gallery sits in the centre. Single coherent photo, not a collage."
+    },
+    {
+      "category": "cloud-wisp",
+      "path": "assets/scenes/cloud-wisp.webp",
+      "prompt": "Asset type: photorealistic atmospheric compositing asset on a genuinely transparent background, wide horizontal composition. A long, delicate, broken wisp of cold alpine cloud and mountain mist, white and soft silver-grey, physically realistic fine vapor texture, uneven feathered edges dissolving into transparent air, semi-transparent light patches with open gaps, more delicate than dense. The entire cloud wisp fits within the image, no opaque sky, no landscape, no other objects. This is a film-quality cloud veil used over realistic mountain photography, so avoid flat cartoon puffs, glowing smoke, illustration, borders, words and watermarks."
+    },
+    {
+      "category": "air-vehicle",
+      "path": "assets/scenes/air-vehicle.webp",
+      "prompt": "Asset type: photorealistic small vehicle sprite with transparent background for compositing into a distant futuristic city, isolated full object. A single sleek, believable dark graphite futuristic flying passenger car, compact body, side three-quarter view facing right, two tiny pale cyan propulsion lights and small amber navigation light, realistic cinematic hard-surface metal with restrained reflections. Clean full silhouette, object centered and fits completely inside the image, transparent background, no ground or sky, no contrail, no smoke, no giant bloom. The car will be composited very small in the distance in a realistic cyberpunk city. Avoid toy appearance, cartoon, overly elaborate starship, bright chrome, letters, logos, interface and watermark."
     }
   ]
 }
