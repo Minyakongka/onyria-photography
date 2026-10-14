@@ -212,6 +212,17 @@ const siteContent = {
       "height": 2048
     },
     {
+      "id": "onyria-landscape-dsc06010",
+      "src": "assets/onyria-landscape-dsc06010.jpg",
+      "title": "",
+      "category": "landscape",
+      "label": "云浮岳峙",
+      "alt": "暖色霞光下的雪山双峰，云海与流云环绕山体",
+      "description": "",
+      "width": 2047,
+      "height": 1023
+    },
+    {
       "id": "onyria-dsc01023",
       "src": "assets/onyria-dsc01023.png",
       "title": "",
