@@ -184,22 +184,30 @@ window.initOnyriaPage = () => {
   const lightboxImage=document.getElementById('lightbox-image');
   listen(lightboxImage,'touchstart',e=>{touchX=e.changedTouches[0].clientX;touchY=e.changedTouches[0].clientY;},{passive:true});
   listen(lightboxImage,'touchend',e=>{if(touchX===null)return;const dx=e.changedTouches[0].clientX-touchX,dy=e.changedTouches[0].clientY-touchY;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy))step(dx<0?1:-1);touchX=null;},{passive:true});
+  const journalTitleParts=article=>{
+    const prefix=make('span','journal-prefix'),dot=make('span','journal-separator','·');
+    dot.setAttribute('aria-hidden','true');
+    prefix.append(make('span','journal-kind',article.kind||'徒步纪实'),dot);
+    return [prefix,make('span','journal-title-text',article.title)];
+  };
   const journalContent=document.getElementById('journal-content');
   if(journalContent){
     const list=make('div','journal-list');
     siteContent.articles.forEach((article,index)=>{
       const button=make('button','journal-entry');button.type='button';button.dataset.article=String(index);
-      button.setAttribute('aria-label',`阅读全文：${article.title}`);
-      const copy=make('span','journal-copy');
-      copy.append(make('span','journal-tag',article.tag),make('span','journal-title',article.title),make('span','journal-excerpt',article.excerpt||article.paragraphs[0]));
-      button.append(make('span','journal-index',String(index+1).padStart(2,'0')),copy,make('span','read-label','阅读全文 ↗'));
+      button.setAttribute('aria-label',`阅读${article.kind||'徒步纪实'}：${article.title}`);
+      const copy=make('span','journal-copy'),heading=make('span','journal-title'),arrow=make('span','journal-arrow');
+      heading.append(...journalTitleParts(article));copy.append(heading);
+      arrow.setAttribute('aria-hidden','true');
+      arrow.innerHTML='<svg viewBox="0 0 52 52" fill="none" aria-hidden="true" focusable="false"><circle class="journal-arrow-ring" cx="26" cy="26" r="24" stroke="currentColor" stroke-width="1"/><path class="journal-arrow-line" d="m18 34 16-16M18 18h16v16" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      button.append(make('span','journal-index',String(index+1).padStart(2,'0')),copy,arrow);
       list.append(button);
     });
     journalContent.replaceChildren(list);
   }
   document.querySelectorAll('[data-article]').forEach(button=>listen(button,'click',()=>{
     const article=siteContent.articles[Number(button.dataset.article)];opener=button;
-    document.getElementById('article-title').textContent=article.title;
+    document.getElementById('article-title').replaceChildren(...journalTitleParts(article));
     document.getElementById('article-tag').textContent=article.tag;
     document.getElementById('article-body').replaceChildren(...article.paragraphs.map(text=>make('p','',text)));
     articleDialog.showModal();articleDialog.scrollTop=0;lock();

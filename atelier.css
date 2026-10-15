@@ -11,7 +11,7 @@
 .about #about-content .about-copy>p,.about #about-content .about-dedication>p{font-size:16px;line-height:2.15;color:#575b54;letter-spacing:.035em}
 .about #about-content .about-dedication{margin:0;padding:0 0 0 clamp(24px,3vw,48px);border-left:1px solid #d9d9d2;text-align:left;min-width:0}
 .about #about-content .about-contact{margin-top:24px}
-.about .about-email{display:inline-block;margin-top:10px;padding:4px 0;border-bottom:2px solid #ffffffb3;color:#fff;opacity:1;font-family:var(--font-meta),var(--font-cn);font-size:clamp(18px,1.3vw,22px);font-weight:600;letter-spacing:.025em;overflow-wrap:anywhere}
+.about .about-email{display:inline-block;margin-top:10px;padding:4px 0;border-bottom:2px solid #ffffffb3;color:#fff;opacity:1;font-family:var(--font-meta),var(--font-cn);font-size:clamp(16px,1.1vw,18px);font-weight:400;letter-spacing:.025em;overflow-wrap:anywhere}
 .about .about-email:hover,.about .about-email:focus-visible{color:#fff;opacity:1;border-color:#fff}
 @media(max-width:700px){.about #about-content{grid-template-columns:1fr;gap:32px}.about #about-content .about-dedication{border-left:0;border-top:1px solid #d9d9d2;padding:28px 0 0}}
 
@@ -65,15 +65,20 @@
 @media(max-width:600px){.music-menu{width:28px;height:32px}.music-card{width:min(360px,calc(100vw - 32px));padding:22px;max-height:calc(100dvh - 160px)}}
 
 /* Text-first hiking journal, with one complete font subset for this story. */
-@font-face{font-family:"Onyria Journal";src:url("assets/fonts/source-han-serif-sc-journal-regular.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:"Onyria Journal";src:url("assets/fonts/source-han-serif-sc-journal-regular-v2.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap}
 #journal .journal-list{border-top:1px solid #d9d9d2}
-#journal .journal-entry{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:28px;align-items:center;padding:34px 0;text-align:left;background:transparent}
+#journal .journal-entry{display:grid;grid-template-columns:36px minmax(0,1fr) 52px;gap:28px;align-items:center;padding:32px 0;text-align:left;background:transparent}
 #journal .journal-copy{display:block;min-width:0}
-#journal .journal-tag{display:block;margin-bottom:14px;font-family:"Onyria Journal",var(--font-cn);font-size:12px;line-height:1.8;letter-spacing:.14em;color:#74796c}
 #journal .journal-title{display:block;font-family:"Onyria Journal",var(--font-cn);font-size:clamp(23px,2vw,30px);font-weight:400;line-height:1.65;letter-spacing:.045em;color:#242c22}
-#journal .journal-excerpt{max-width:43em;margin-top:14px;font-family:"Onyria Journal",var(--font-cn);font-size:15px;line-height:2;color:#626a5d;letter-spacing:.025em}
-#journal .journal-index{align-self:start;margin-top:5px;color:#858b7c;font-size:12px}
-#journal .read-label{font-family:"Onyria Journal",var(--font-cn);font-size:13px;letter-spacing:.04em;white-space:nowrap;color:#4f6047}
+#journal .journal-index{align-self:center;margin-top:0;color:#858b7c;font-size:12px}
+.journal-title .journal-prefix,#article-title .journal-prefix{font-family:inherit;font-size:.8em;font-weight:400;white-space:nowrap}
+.journal-separator{margin:0 .65em;font-family:inherit;font-size:.8em}
+#journal .journal-arrow{display:block;justify-self:end;width:52px;height:52px;color:#586b4b}
+#journal .journal-arrow svg{display:block;width:100%;height:100%}
+#journal .journal-arrow-ring{stroke-opacity:.4;transition:stroke-opacity .25s}
+#journal .journal-arrow-line{transition:transform .25s}
+#journal .journal-entry:is(:hover,:focus-visible) .journal-arrow-ring{stroke-opacity:.9}
+#journal .journal-entry:is(:hover,:focus-visible) .journal-arrow-line{transform:translate(1.5px,-1.5px)}
 #journal .journal-entry:hover .journal-title{color:#4f6047}
 #journal .journal-entry:focus-visible{outline:2px solid #6e7b61;outline-offset:8px}
 .article-dialog{--bg:#f8f6f1;--text:#30352e;--muted:#72766b;--line:#dfdfd5;width:min(1020px,calc(100% - 64px));max-height:92dvh;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;color-scheme:light;font-family:"Onyria Journal",var(--font-cn);overscroll-behavior:contain}
@@ -86,4 +91,4 @@
 .article-dialog #article-body{max-width:684px;margin:0 auto}
 .article-dialog #article-body p{margin:0 0 1.55em;font-family:"Onyria Journal",var(--font-cn);font-size:18px;font-weight:400;line-height:2.15;letter-spacing:.025em;color:#363c33;text-indent:2em;text-align:justify;line-break:strict;overflow-wrap:break-word}
 .article-dialog .article-sign{max-width:684px;margin:46px auto 0;padding-top:24px;border-top:1px solid #d9dacf;color:#59634f;font-size:24px}
-@media(max-width:700px){#journal .journal-entry{grid-template-columns:25px minmax(0,1fr);gap:16px;padding:28px 0}#journal .journal-title{font-size:23px}#journal .read-label{grid-column:2;grid-row:auto;text-align:left;margin-top:2px}#journal .journal-excerpt{font-size:14px}.article-dialog{width:100%;max-width:none;max-height:100dvh;height:100dvh;border:0;border-radius:0}.article-dialog .article-content{padding:32px 7% 48px}.article-dialog .article-bar{padding:8px 5%}.article-dialog #article-title{font-size:28px;margin-bottom:30px}.article-dialog #article-body p{font-size:17px;line-height:2.1}}
+@media(max-width:700px){#journal .journal-entry{grid-template-columns:20px minmax(0,1fr) 40px;gap:12px;padding:26px 0}#journal .journal-title{font-size:23px}#journal .journal-arrow{width:40px;height:40px}.article-dialog{width:100%;max-width:none;max-height:100dvh;height:100dvh;border:0;border-radius:0}.article-dialog .article-content{padding:32px 7% 48px}.article-dialog .article-bar{padding:8px 5%}.article-dialog #article-title{font-size:28px;margin-bottom:30px}.article-dialog #article-body p{font-size:17px;line-height:2.1}}
