@@ -1,6 +1,8 @@
 /* Supply the missing character from the same Source Han Serif regular face. */
 @font-face{font-family:"Source Han Serif SC";src:url("assets/fonts/source-han-serif-sc-wei-regular.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap;unicode-range:U+5FAE}
 .header nav a{font-family:"Montserrat",var(--font-cn);font-weight:400;font-style:normal}
+@font-face{font-family:"Onyria Film Label";src:url("assets/fonts/source-han-serif-sc-film-regular.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap}
+.header nav a[href$="#documentaries"],#documentaries .eyebrow{font-family:"Onyria Film Label","Montserrat",var(--font-cn);font-weight:400;font-style:normal}
 .about .about-intro{display:flex;justify-content:center;align-items:center;width:100%;text-align:center}
 .about .about-intro>div{width:100%}
 .about #about-title{text-align:center}
@@ -9,8 +11,8 @@
 .about #about-content .about-copy>p,.about #about-content .about-dedication>p{font-size:16px;line-height:2.15;color:#575b54;letter-spacing:.035em}
 .about #about-content .about-dedication{margin:0;padding:0 0 0 clamp(24px,3vw,48px);border-left:1px solid #d9d9d2;text-align:left;min-width:0}
 .about #about-content .about-contact{margin-top:24px}
-.about .about-email{display:inline-block;margin-top:10px;padding:4px 0;border-bottom:2px solid #64735a;color:#1d2a21;font-family:var(--font-meta),var(--font-cn);font-size:clamp(18px,1.3vw,22px);font-weight:600;letter-spacing:.025em;overflow-wrap:anywhere}
-.about .about-email:hover,.about .about-email:focus-visible{color:#111211;border-color:currentColor}
+.about .about-email{display:inline-block;margin-top:10px;padding:4px 0;border-bottom:2px solid #ffffffb3;color:#fff;opacity:1;font-family:var(--font-meta),var(--font-cn);font-size:clamp(18px,1.3vw,22px);font-weight:600;letter-spacing:.025em;overflow-wrap:anywhere}
+.about .about-email:hover,.about .about-email:focus-visible{color:#fff;opacity:1;border-color:#fff}
 @media(max-width:700px){.about #about-content{grid-template-columns:1fr;gap:32px}.about #about-content .about-dedication{border-left:0;border-top:1px solid #d9d9d2;padding:28px 0 0}}
 
 /* A source label appears beside the music controls without covering the volume panel. */
