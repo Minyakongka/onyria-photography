@@ -184,6 +184,19 @@ window.initOnyriaPage = () => {
   const lightboxImage=document.getElementById('lightbox-image');
   listen(lightboxImage,'touchstart',e=>{touchX=e.changedTouches[0].clientX;touchY=e.changedTouches[0].clientY;},{passive:true});
   listen(lightboxImage,'touchend',e=>{if(touchX===null)return;const dx=e.changedTouches[0].clientX-touchX,dy=e.changedTouches[0].clientY-touchY;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy))step(dx<0?1:-1);touchX=null;},{passive:true});
+  const journalContent=document.getElementById('journal-content');
+  if(journalContent){
+    const list=make('div','journal-list');
+    siteContent.articles.forEach((article,index)=>{
+      const button=make('button','journal-entry');button.type='button';button.dataset.article=String(index);
+      button.setAttribute('aria-label',`阅读全文：${article.title}`);
+      const copy=make('span','journal-copy');
+      copy.append(make('span','journal-tag',article.tag),make('span','journal-title',article.title),make('span','journal-excerpt',article.excerpt||article.paragraphs[0]));
+      button.append(make('span','journal-index',String(index+1).padStart(2,'0')),copy,make('span','read-label','阅读全文 ↗'));
+      list.append(button);
+    });
+    journalContent.replaceChildren(list);
+  }
   document.querySelectorAll('[data-article]').forEach(button=>listen(button,'click',()=>{
     const article=siteContent.articles[Number(button.dataset.article)];opener=button;
     document.getElementById('article-title').textContent=article.title;
