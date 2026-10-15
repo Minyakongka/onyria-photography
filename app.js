@@ -205,16 +205,27 @@ window.initOnyriaPage = () => {
     });
     journalContent.replaceChildren(list);
   }
+  // Keep the reader in the document layer so page annotation tools can select its text.
+  const articleBackdrop=make('div','article-backdrop');
+  articleBackdrop.hidden=true;articleBackdrop.setAttribute('aria-hidden','true');
+  document.body.append(articleBackdrop);
+  scope.cleanup(()=>{articleBackdrop.remove();if(articleDialog.open)articleDialog.close();});
   document.querySelectorAll('[data-article]').forEach(button=>listen(button,'click',()=>{
     const article=siteContent.articles[Number(button.dataset.article)];opener=button;
     document.getElementById('article-title').replaceChildren(...journalTitleParts(article));
     document.getElementById('article-tag').textContent=article.tag;
-    document.getElementById('article-body').replaceChildren(...article.paragraphs.map(text=>make('p','',text)));
-    articleDialog.showModal();articleDialog.scrollTop=0;lock();
+    document.getElementById('article-body').replaceChildren(...article.paragraphs.map((text,index)=>{
+      const paragraph=make('p','',text);paragraph.id=`${article.id}-paragraph-${index+1}`;return paragraph;
+    }));
+    articleBackdrop.hidden=false;articleDialog.show();articleDialog.scrollTop=0;lock();
+    document.getElementById('article-close').focus({preventScroll:true});
   }));
   listen(document.getElementById('article-close'),'click',()=>articleDialog.close());
-  listen(articleDialog,'close',unlock);
-  listen(articleDialog,'click',e=>{if(e.target===articleDialog){const r=articleDialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)articleDialog.close();}});
+  listen(articleDialog,'close',()=>{articleBackdrop.hidden=true;unlock();});
+  listen(articleBackdrop,'click',()=>articleDialog.close());
+  listen(document,'keydown',event=>{
+    if(event.key==='Escape'&&!event.defaultPrevented&&articleDialog.open){event.preventDefault();articleDialog.close();}
+  });
   const header=document.getElementById('header');
   const onScroll=()=>header.classList.toggle('scrolled',window.scrollY>60);
   listen(window,'scroll',onScroll,{passive:true});onScroll();

@@ -92,3 +92,9 @@
 .article-dialog #article-body p{margin:0 0 1.55em;font-family:"Onyria Journal",var(--font-cn);font-size:18px;font-weight:400;line-height:2.15;letter-spacing:.025em;color:#363c33;text-indent:2em;text-align:justify;line-break:strict;overflow-wrap:break-word}
 .article-dialog .article-sign{max-width:684px;margin:46px auto 0;padding-top:24px;border-top:1px solid #d9dacf;color:#59634f;font-size:24px}
 @media(max-width:700px){#journal .journal-entry{grid-template-columns:20px minmax(0,1fr) 40px;gap:12px;padding:26px 0}#journal .journal-title{font-size:23px}#journal .journal-arrow{width:40px;height:40px}.article-dialog{width:100%;max-width:none;max-height:100dvh;height:100dvh;border:0;border-radius:0}.article-dialog .article-content{padding:32px 7% 48px}.article-dialog .article-bar{padding:8px 5%}.article-dialog #article-title{font-size:28px;margin-bottom:30px}.article-dialog #article-body p{font-size:17px;line-height:2.1}}
+
+/* Ordinary document layers let the site review overlay reach journal paragraphs. */
+.article-backdrop{position:fixed;inset:0;z-index:60;background:#080d0cbd}
+.article-backdrop[hidden]{display:none}
+.article-dialog{position:fixed;inset:0;z-index:61;height:fit-content;margin:auto}
+@media(max-width:700px){.article-dialog{height:100dvh}}
