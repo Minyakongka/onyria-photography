@@ -212,8 +212,8 @@ const siteContent = {
       "height": 2048
     },
     {
-      "id": "onyria-landscape-dsc06010",
-      "src": "assets/onyria-landscape-dsc06010.jpg",
+      "id": "onyria-landscape-dsc06010-v2",
+      "src": "assets/onyria-landscape-dsc06010-v2.jpg",
       "title": "",
       "category": "landscape",
       "label": "云浮岳峙",
