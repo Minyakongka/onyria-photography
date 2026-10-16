@@ -136,7 +136,7 @@ window.initOnyriaPage = () => {
     });
   });
   const reducedMotion=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const coverPhotos={landscape:'mountains',sunset:'onyria-dsc01023',city:'onyria-city-pano-2',stars:'onyria-stars-dsc07557'};
+  const coverPhotos={landscape:'mountains',sunset:'onyria-dsc01023-v2',city:'onyria-city-pano-2',stars:'onyria-stars-dsc07557'};
   const covers=document.getElementById('category-covers');
   const orderedCovers=Object.entries(coverPhotos);
   if(covers)for(const [category,id] of orderedCovers){
@@ -199,7 +199,7 @@ window.initOnyriaPage = () => {
       const copy=make('span','journal-copy'),heading=make('span','journal-title'),arrow=make('span','journal-arrow');
       heading.append(...journalTitleParts(article));copy.append(heading);
       arrow.setAttribute('aria-hidden','true');
-      arrow.innerHTML='<svg viewBox="0 0 52 52" fill="none" aria-hidden="true" focusable="false"><circle class="journal-arrow-ring" cx="26" cy="26" r="24" stroke="currentColor" stroke-width="1"/><path class="journal-arrow-line" d="m18 34 16-16M18 18h16v16" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      arrow.innerHTML='<svg viewBox="0 0 52 52" fill="none" aria-hidden="true" focusable="false"><path class="journal-arrow-line" d="m18 34 16-16M18 18h16v16" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg>';
       button.append(make('span','journal-index',String(index+1).padStart(2,'0')),copy,arrow);
       list.append(button);
     });

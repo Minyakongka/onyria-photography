@@ -75,9 +75,7 @@
 .journal-separator{margin:0 .65em;font-family:inherit;font-size:.8em}
 #journal .journal-arrow{display:block;justify-self:end;width:52px;height:52px;color:#586b4b}
 #journal .journal-arrow svg{display:block;width:100%;height:100%}
-#journal .journal-arrow-ring{stroke-opacity:.4;transition:stroke-opacity .25s}
 #journal .journal-arrow-line{transition:transform .25s}
-#journal .journal-entry:is(:hover,:focus-visible) .journal-arrow-ring{stroke-opacity:.9}
 #journal .journal-entry:is(:hover,:focus-visible) .journal-arrow-line{transform:translate(1.5px,-1.5px)}
 #journal .journal-entry:hover .journal-title{color:#4f6047}
 #journal .journal-entry:focus-visible{outline:2px solid #6e7b61;outline-offset:8px}
