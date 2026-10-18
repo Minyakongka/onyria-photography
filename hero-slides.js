@@ -2,7 +2,7 @@
 // New photographs can be added here without changing gallery data.
 window.onyriaHeroSlides = [
   {
-    src: 'https://onyria-photography.smokymaple16.chatgpt.site/assets/cover-onyria-27k.jpg',
+    src: 'https://onyria-photography.smokymaple16.chatgpt.site/assets/cover-onyria-dsc00575-a-27k.jpg',
     alt: '星空下的雪山，山顶泛着柔和光芒，流云环绕山体',
     width: 2704,
     height: 1804,

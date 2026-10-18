@@ -257,8 +257,8 @@ const siteContent = {
       "height": 1366
     },
     {
-      "id": "onyria-dsc00575-gallery",
-      "src": "assets/onyria-dsc00575-gallery.png",
+      "id": "onyria-dsc00575-gallery-v2",
+      "src": "assets/onyria-dsc00575-gallery-v2.jpg",
       "title": "",
       "category": "sunset",
       "label": "屹岳断霞",
