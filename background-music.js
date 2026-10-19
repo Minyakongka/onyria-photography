@@ -16,7 +16,7 @@
   const elapsed=document.getElementById('music-elapsed');
   const durationLabel=document.getElementById('music-duration');
   const cardStatus=document.getElementById('music-card-status');
-  let scrubbing=false;
+  let scrubbing=false,pendingSeek=null;
   const tracks=[
     {src:'https://onyria-photography.smokymaple16.chatgpt.site/assets/onyria-resilience.mp3',title:'Resilience',artist:'Ivan Torrent',album:'Onyria'},
     {src:'https://onyria-photography.smokymaple16.chatgpt.site/assets/onyria-power-of-will.mp3',title:'The Power of Will (feat. Gaby Koss)',artist:'Ivan Torrent',album:'Reverie'}
@@ -46,7 +46,7 @@
   if(trackIndex!==0)audio.src=tracks[trackIndex].src;
   showTrack();
   slider.value=String(Math.round(volume*100));
-  function save(){try{sessionStorage.setItem(key,JSON.stringify({enabled:wanted,volume,position:audio.readyState>0?audio.currentTime:position,trackIndex}));}catch{}}
+  function save(){try{sessionStorage.setItem(key,JSON.stringify({enabled:wanted,volume,position:pendingSeek??(audio.readyState>0?audio.currentTime:position),trackIndex}));}catch{}}
   function clock(seconds){
     if(!Number.isFinite(seconds))return '--:--';
     const total=Math.max(0,Math.floor(seconds)),minutes=Math.floor(total/60);
@@ -55,13 +55,40 @@
   function updateProgress(){
     if(!progress)return;
     const duration=audio.duration,ready=Number.isFinite(duration)&&duration>0;
-    const current=audio.readyState>0?audio.currentTime:position;
+    const current=scrubbing&&ready?Number(progress.value)/1000*duration:pendingSeek??(audio.readyState>0?audio.currentTime:position);
     progress.disabled=!ready;
     if(!scrubbing)progress.value=String(ready?Math.round(Math.min(1,current/duration)*1000):0);
     progress.style.setProperty('--music-progress',`${Number(progress.value)/10}%`);
     progress.setAttribute('aria-valuetext',ready?`${clock(current)}，共 ${clock(duration)}`:'正在读取音乐时长');
     elapsed.textContent=clock(current);
     durationLabel.textContent=ready?clock(duration):'--:--';
+  }
+  function applyPendingSeek(){
+    if(pendingSeek===null||scrubbing||!Number.isFinite(audio.duration)||audio.duration<=0)return;
+    const target=Math.max(0,Math.min(audio.duration,pendingSeek));
+    // This host can return the whole MP3 for a byte-range request. Seeking
+    // outside buffered audio can therefore restart it; wait for that data.
+    let buffered=target===0;
+    for(let i=0;i<audio.buffered.length&&!buffered;i++){
+      buffered=target>=audio.buffered.start(i)&&target<=audio.buffered.end(i);
+    }
+    if(!buffered){
+      audio.preload='auto';
+      if(cardStatus)cardStatus.textContent='正在加载所选位置，加载完成后将自动跳转。';
+      return;
+    }
+    try{
+      audio.currentTime=target;
+      position=target;pendingSeek=null;
+      if(cardStatus)cardStatus.textContent='';
+      save();updateProgress();
+    }catch{if(cardStatus)cardStatus.textContent='暂时无法跳转，请稍后重试。';}
+  }
+  function seekTo(target){
+    if(!Number.isFinite(target)||!Number.isFinite(audio.duration)||audio.duration<=0)return;
+    position=Math.max(0,Math.min(audio.duration,target));
+    pendingSeek=position;audio.preload='auto';
+    applyPendingSeek();save();updateProgress();
   }
   function update(){
     const playing=!audio.paused;
@@ -89,27 +116,27 @@
   function pause(permanent){
     request++;
     if(permanent)wanted=false;
-    if(audio.readyState>0)position=audio.currentTime;
+    if(pendingSeek===null&&audio.readyState>0)position=audio.currentTime;
     audio.pause();save();update();
   }
   function advance(){
     const resume=wanted&&!audio.paused;
-    request++;audio.pause();position=0;trackIndex=(trackIndex+1)%tracks.length;
+    request++;pendingSeek=null;scrubbing=false;audio.pause();position=0;trackIndex=(trackIndex+1)%tracks.length;
     audio.src=tracks[trackIndex].src;audio.load();showTrack();save();update();
     updateProgress();if(resume)void play();
   }
   next?.addEventListener('click',advance);
   cardNext?.addEventListener('click',advance);
   audio.addEventListener('ended',()=>{
-    request++;position=0;trackIndex=(trackIndex+1)%tracks.length;
+    request++;pendingSeek=null;scrubbing=false;position=0;trackIndex=(trackIndex+1)%tracks.length;
     audio.src=tracks[trackIndex].src;audio.load();showTrack();save();update();
     if(wanted)void play();
   });
   audio.addEventListener('loadedmetadata',()=>{
-    if(position>0&&Number.isFinite(audio.duration))audio.currentTime=Math.min(position,audio.duration);
+    if(position>0&&Number.isFinite(audio.duration))seekTo(position);
     updateProgress();
   });
-  audio.addEventListener('durationchange',updateProgress);
+  for(const event of ['progress','canplay','canplaythrough','durationchange'])audio.addEventListener(event,()=>{applyPendingSeek();updateProgress();});
   audio.addEventListener('emptied',updateProgress);
   audio.addEventListener('seeked',updateProgress);
   audio.addEventListener('play',update);
@@ -139,20 +166,23 @@
     if(!card.hidden){closeCard();return;}
     if(options)options.open=false;
     card.hidden=false;menu.setAttribute('aria-expanded','true');menu.setAttribute('aria-label','关闭音乐卡片');menu.closest('.music-control').classList.add('has-music-card');
-    audio.preload='metadata';
+    audio.preload='auto';
     if(audio.readyState===0&&audio.paused&&!audio.error)audio.load();
     updateProgress();close?.focus({preventScroll:true});
   });
   close?.addEventListener('click',()=>closeCard(true));
-  progress?.addEventListener('pointerdown',()=>{scrubbing=true;});
+  progress?.addEventListener('pointerdown',()=>{pendingSeek=null;scrubbing=true;if(cardStatus)cardStatus.textContent='';});
   progress?.addEventListener('input',()=>{
     if(!Number.isFinite(audio.duration)||audio.duration<=0)return;
-    position=Math.max(0,Math.min(audio.duration,Number(progress.value)/1000*audio.duration));
-    try{audio.currentTime=position;save();updateProgress();}catch{if(cardStatus)cardStatus.textContent='暂时无法跳转，请稍后重试。';}
+    pendingSeek=null;scrubbing=true;if(cardStatus)cardStatus.textContent='';updateProgress();
   });
-  function finishScrub(){if(scrubbing){scrubbing=false;updateProgress();}}
+  function finishScrub(){
+    if(!scrubbing)return;
+    const target=Number(progress.value)/1000*audio.duration;
+    scrubbing=false;seekTo(target);
+  }
   document.addEventListener('pointerup',finishScrub);
-  document.addEventListener('pointercancel',finishScrub);
+  document.addEventListener('pointercancel',()=>{scrubbing=false;updateProgress();});
   progress?.addEventListener('change',finishScrub);
   function closeOutside(event){
     if(!event.target.closest?.('.music-control')&&options)options.open=false;
@@ -180,7 +210,7 @@
   });
   window.addEventListener('pagehide',()=>pause(false));
   window.addEventListener('pageshow',event=>{if(event.persisted&&started&&wanted)void play();});
-  audio.addEventListener('timeupdate',()=>{position=audio.currentTime;updateProgress();if(Math.floor(position)%5===0)save();});
+  audio.addEventListener('timeupdate',()=>{if(!scrubbing&&pendingSeek===null)position=audio.currentTime;updateProgress();if(Math.floor(audio.currentTime)%5===0)save();});
   update();
   if(saved.enabled===true)void play();
 })();
