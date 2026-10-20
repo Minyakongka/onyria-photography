@@ -8,6 +8,7 @@ window.initOnyriaPage = () => {
   const lightbox = document.getElementById('lightbox');
   const articleDialog = document.getElementById('article-dialog');
   let currentFilter = document.body.dataset.category || 'all', currentIndex = 0, opener = null;
+  let viewerPhotos = [], viewerOpener = null;
   const galleryViewport = window.matchMedia('(max-width: 600px)');
   const aspectRatio = photo => photo.width / photo.height || 1.5;
   // Balance row heights globally. Native aspect ratios determine each width;
@@ -44,7 +45,7 @@ window.initOnyriaPage = () => {
     img.sizes=sizes;
   }
   const lock = () => document.body.classList.add('modal-open');
-  const unlock = () => {document.body.classList.remove('modal-open');if(opener?.isConnected)opener.focus();};
+  const unlock = () => {document.body.classList.remove('modal-open');if(opener?.isConnected)opener.focus({preventScroll:true});};
   function renderGallery(){
     if(!gallery)return;
     gallery.replaceChildren();
@@ -61,7 +62,7 @@ window.initOnyriaPage = () => {
       if(photo.width && photo.height){img.width=photo.width;img.height=photo.height;}
       listen(img,'error',()=>{img.classList.add('image-error');},{once:true});
       button.append(img,make('span','photo-open','全屏观看'));
-      listen(button,'click',()=>{opener=button;currentIndex=photos.indexOf(photo);updateLightbox();lightbox.showModal();lock();});
+      listen(button,'click',()=>openLightbox(photos,index,button));
       figure.append(button);
       if(photo.title || photo.description){
         const caption = make('figcaption','photo-caption'), info = make('div');
@@ -90,7 +91,7 @@ window.initOnyriaPage = () => {
       photos.forEach((photo,index)=>{
         const button=make('button','filmstrip-thumb');button.type='button';
         button.setAttribute('aria-label',`查看第 ${index+1} 张：${photo.title||photo.alt}`);
-        const img=make('img');img.src='https://onyria-photography.smokymaple16.chatgpt.site/assets/thumbnails/'+photo.id+'.jpg';img.alt='';img.loading='lazy';img.decoding='async';
+        const img=make('img');img.src=photo.thumbnail||'https://onyria-photography.smokymaple16.chatgpt.site/assets/thumbnails/'+photo.id+'.jpg';img.alt='';img.loading='lazy';img.decoding='async';
         button.append(img,make('span','filmstrip-number',String(index+1).padStart(2,'0')));
         listen(button,'click',()=>{currentIndex=index;updateLightbox();});strip.append(button);
       });
@@ -103,7 +104,7 @@ window.initOnyriaPage = () => {
     later(()=>{if(lightbox.open&&selected===strip.children[currentIndex])selected?.scrollIntoView?.({block:'nearest',inline:'center',behavior:'instant'});},0);
   }
   function updateLightbox(){
-    const photos=filteredPhotos(),photo=photos[currentIndex],img=document.getElementById('lightbox-image');
+    const photos=viewerPhotos,photo=photos[currentIndex],img=document.getElementById('lightbox-image');
     img.src=photo.src;img.alt=photo.alt;
     document.getElementById('lightbox-title').textContent=photo.title;
     document.getElementById('lightbox-category').textContent=photo.description;
@@ -112,7 +113,12 @@ window.initOnyriaPage = () => {
     document.getElementById('photo-next').disabled=photos.length<2;
     syncFilmstrip(photos);
   }
-  function step(direction){const n=filteredPhotos().length;currentIndex=(currentIndex+direction+n)%n;updateLightbox();}
+  function openLightbox(photos,index,button){
+    viewerPhotos=photos;currentIndex=index;viewerOpener=button;
+    wheelAmount=0;lastWheel=0;lastStep=-Infinity;
+    updateLightbox();lightbox.showModal();lock();
+  }
+  function step(direction){const n=viewerPhotos.length;if(!n)return;currentIndex=(currentIndex+direction+n)%n;updateLightbox();}
   document.querySelectorAll('.documentary-card').forEach(card=>{
     const poster=card.querySelector('.documentary-poster'),player=card.querySelector('.documentary-player');
     function startFilm(){
@@ -157,7 +163,12 @@ window.initOnyriaPage = () => {
   listen(document.getElementById('photo-prev'),'click',()=>step(-1));
   listen(document.getElementById('photo-next'),'click',()=>step(1));
   listen(lightbox,'keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();step(-1);}if(e.key==='ArrowRight'){e.preventDefault();step(1);}});
-  listen(lightbox,'close',unlock);
+  listen(lightbox,'close',()=>{
+    if(!articleDialog.open)document.body.classList.remove('modal-open');
+    if(viewerOpener?.isConnected)viewerOpener.focus({preventScroll:true});
+    viewerOpener=null;
+  });
+  listen(lightbox,'cancel',event=>{event.preventDefault();lightbox.close();});
   let wheelAmount=0,lastWheel=0,lastStep=-Infinity;
   listen(lightbox,'wheel',event=>{
     if(event.ctrlKey)return;
@@ -209,12 +220,13 @@ window.initOnyriaPage = () => {
   const articleBackdrop=make('div','article-backdrop');
   articleBackdrop.hidden=true;articleBackdrop.setAttribute('aria-hidden','true');
   document.body.append(articleBackdrop);
-  scope.cleanup(()=>{articleBackdrop.remove();if(articleDialog.open)articleDialog.close();});
+  scope.cleanup(()=>{articleBackdrop.remove();if(lightbox.open)lightbox.close();if(articleDialog.open)articleDialog.close();});
   document.querySelectorAll('[data-article]').forEach(button=>listen(button,'click',()=>{
     const article=siteContent.articles[Number(button.dataset.article)];opener=button;
     document.getElementById('article-title').replaceChildren(...journalTitleParts(article));
     document.getElementById('article-tag').textContent=article.tag;
     let articlePhotoNumber=0;
+    const articlePhotos=[];
     document.getElementById('article-body').replaceChildren(...article.paragraphs.flatMap((text,index)=>{
       const paragraph=make('p','',text);paragraph.id=`${article.id}-paragraph-${index+1}`;
       const photos=(article.images||[]).filter(photo=>photo.afterParagraph===index+1).map(photo=>{
@@ -224,7 +236,12 @@ window.initOnyriaPage = () => {
         const img=make('img');img.src=photo.src;img.alt=photo.alt||photo.caption||`P${number}`;
         img.width=photo.width;img.height=photo.height;img.loading='lazy';img.decoding='async';
         const caption=make('figcaption','article-photo-caption',`P${number}`+(photo.caption?`：${photo.caption}`:''));
-        figure.append(img,caption);return figure;
+        const photoButton=make('button','article-photo-button');photoButton.type='button';
+        photoButton.setAttribute('aria-label',`放大查看：P${number}`);
+        const photoIndex=articlePhotos.length;
+        articlePhotos.push({...photo,id:`${article.id}-photo-${number}`,title:`P${number}`,description:photo.caption||'',alt:img.alt,thumbnail:photo.src.replace('assets/journal/','https://onyria-photography.smokymaple16.chatgpt.site/assets/thumbnails/journal-')});
+        listen(photoButton,'click',()=>openLightbox(articlePhotos,photoIndex,photoButton));
+        photoButton.append(img);figure.append(photoButton,caption);return figure;
       });
       return [paragraph,...photos];
     }));
@@ -235,7 +252,7 @@ window.initOnyriaPage = () => {
   listen(articleDialog,'close',()=>{articleBackdrop.hidden=true;unlock();});
   listen(articleBackdrop,'click',()=>articleDialog.close());
   listen(document,'keydown',event=>{
-    if(event.key==='Escape'&&!event.defaultPrevented&&articleDialog.open){event.preventDefault();articleDialog.close();}
+    if(event.key==='Escape'&&!event.defaultPrevented&&!lightbox.open&&articleDialog.open){event.preventDefault();articleDialog.close();}
   });
   const header=document.getElementById('header');
   const onScroll=()=>header.classList.toggle('scrolled',window.scrollY>60);
