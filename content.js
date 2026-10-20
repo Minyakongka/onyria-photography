@@ -458,7 +458,113 @@ const siteContent = {
         "所以我足够幸运，山神接纳了我，在川西雨季里给了我难得的四天窗口期，没有登顶是我自己的问题，对配重、体力、时间、物资的分配安排都过于粗糙。但这称不上遗憾，一路上遇到的所有聊过的人，他们都说第一次重装就走狮子王峰登顶线很不简单，误打误撞地直接上了中等难度线路，所以登顶失败也是意料之中，从中吸取的经验远比一次就登顶更重要，在户外，能够下决心适时放弃并且坚信总有成功的一次，也是一种能力。",
         "重装徒步只有在第一天晚上轻微高反并且不熟练搭帐篷的时候才想着以后绝对退坑，而此后的每一个独属于高原的风景都让人欲罢不能。我以前只能遥望狮子王，但现在我站在了它的面前，我期待下一次的成功登顶。"
       ],
-      "kind": "徒步纪实"
+      "kind": "徒步纪实",
+      "images": [
+        {
+          "afterParagraph": 1,
+          "src": "assets/journal/lion-king-peak-upload-01.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "拍摄于2023.7，远处高山的黄昏剪影是龙门山脉群峰",
+          "alt": "拍摄于2023.7，远处高山的黄昏剪影是龙门山脉群峰"
+        },
+        {
+          "afterParagraph": 2,
+          "src": "assets/journal/lion-king-peak-upload-02.jpg",
+          "width": 2048,
+          "height": 1152,
+          "caption": "2024.7拍摄于茂县县城",
+          "alt": "2024.7拍摄于茂县县城"
+        },
+        {
+          "afterParagraph": 2,
+          "src": "assets/journal/lion-king-peak-upload-03.jpg",
+          "width": 1365,
+          "height": 2048,
+          "caption": "2024.7拍摄于茂县县城",
+          "alt": "2024.7拍摄于茂县县城"
+        },
+        {
+          "afterParagraph": 2,
+          "src": "assets/journal/lion-king-peak-upload-04.jpg",
+          "width": 1920,
+          "height": 1080,
+          "caption": "2024.8拍摄于前往汶川县的路上，狮子王峰上空出现酷似龙头的流云",
+          "alt": "2024.8拍摄于前往汶川县的路上，狮子王峰上空出现酷似龙头的流云"
+        },
+        {
+          "afterParagraph": 3,
+          "src": "assets/journal/lion-king-peak-upload-05.jpg",
+          "width": 2048,
+          "height": 1366,
+          "caption": "",
+          "alt": "山野草地上的徒步帐篷"
+        },
+        {
+          "afterParagraph": 3,
+          "src": "assets/journal/lion-king-peak-upload-06.jpg",
+          "width": 2048,
+          "height": 1366,
+          "caption": "",
+          "alt": "山坡草甸上的帐篷与远方群山"
+        },
+        {
+          "afterParagraph": 3,
+          "src": "assets/journal/lion-king-peak-upload-11.jpg",
+          "width": 2048,
+          "height": 1152,
+          "caption": "龙门山脉群峰下白龙池旁的花海",
+          "alt": "龙门山脉群峰下白龙池旁的花海"
+        },
+        {
+          "afterParagraph": 4,
+          "src": "assets/journal/lion-king-peak-upload-07.jpg",
+          "width": 2048,
+          "height": 1366,
+          "caption": "锅圈岩垭口后的干海子",
+          "alt": "锅圈岩垭口后的干海子"
+        },
+        {
+          "afterParagraph": 4,
+          "src": "assets/journal/lion-king-peak-upload-08.jpg",
+          "width": 2048,
+          "height": 1152,
+          "caption": "在锅圈岩垭口遥望幺妹峰",
+          "alt": "在锅圈岩垭口遥望幺妹峰"
+        },
+        {
+          "afterParagraph": 4,
+          "src": "assets/journal/lion-king-peak-upload-13.jpg",
+          "width": 2048,
+          "height": 1152,
+          "caption": "",
+          "alt": "岩壁旁远望连绵群峰"
+        },
+        {
+          "afterParagraph": 4,
+          "src": "assets/journal/lion-king-peak-upload-09.jpg",
+          "width": 2048,
+          "height": 1366,
+          "caption": "直面狮子王峰",
+          "alt": "直面狮子王峰"
+        },
+        {
+          "afterParagraph": 4,
+          "src": "assets/journal/lion-king-peak-upload-12.jpg",
+          "width": 2047,
+          "height": 2047,
+          "caption": "前往狮子王峰路上的一只牦牛头骨",
+          "alt": "前往狮子王峰路上的一只牦牛头骨"
+        },
+        {
+          "afterParagraph": 4,
+          "src": "assets/journal/lion-king-peak-upload-10.jpg",
+          "width": 2048,
+          "height": 871,
+          "caption": "龙门山脉令人惊叹的海拔落差",
+          "alt": "龙门山脉令人惊叹的海拔落差"
+        }
+      ]
     }
   ],
   "credits": []

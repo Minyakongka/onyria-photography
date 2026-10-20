@@ -214,8 +214,19 @@ window.initOnyriaPage = () => {
     const article=siteContent.articles[Number(button.dataset.article)];opener=button;
     document.getElementById('article-title').replaceChildren(...journalTitleParts(article));
     document.getElementById('article-tag').textContent=article.tag;
-    document.getElementById('article-body').replaceChildren(...article.paragraphs.map((text,index)=>{
-      const paragraph=make('p','',text);paragraph.id=`${article.id}-paragraph-${index+1}`;return paragraph;
+    let articlePhotoNumber=0;
+    document.getElementById('article-body').replaceChildren(...article.paragraphs.flatMap((text,index)=>{
+      const paragraph=make('p','',text);paragraph.id=`${article.id}-paragraph-${index+1}`;
+      const photos=(article.images||[]).filter(photo=>photo.afterParagraph===index+1).map(photo=>{
+        const number=++articlePhotoNumber;
+        const figure=make('figure','article-photo'+(photo.height>photo.width?' article-photo-portrait':''));
+        figure.id=`${article.id}-photo-${number}`;
+        const img=make('img');img.src=photo.src;img.alt=photo.alt||photo.caption||`P${number}`;
+        img.width=photo.width;img.height=photo.height;img.loading='lazy';img.decoding='async';
+        const caption=make('figcaption','article-photo-caption',`P${number}`+(photo.caption?`：${photo.caption}`:''));
+        figure.append(img,caption);return figure;
+      });
+      return [paragraph,...photos];
     }));
     articleBackdrop.hidden=false;articleDialog.show();articleDialog.scrollTop=0;lock();
     document.getElementById('article-close').focus({preventScroll:true});

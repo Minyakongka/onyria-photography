@@ -96,3 +96,9 @@
 .article-backdrop[hidden]{display:none}
 .article-dialog{position:fixed;inset:0;z-index:61;height:fit-content;margin:auto}
 @media(max-width:700px){.article-dialog{height:100dvh}}
+
+.article-dialog .article-photo{display:block;width:100%;max-width:100%;margin:30px auto 36px}
+.article-dialog .article-photo img{display:block;width:100%;height:auto;object-fit:contain;filter:none;opacity:1}
+.article-dialog .article-photo-portrait{max-width:456px}
+.article-dialog .article-photo-caption{margin:10px 0 0;font-family:"Onyria Journal",var(--font-cn);font-size:13px;font-weight:400;line-height:1.8;letter-spacing:.02em;color:#72766b;text-align:left;overflow-wrap:break-word}
+@media(max-width:700px){.article-dialog .article-photo{margin:24px auto 30px}.article-dialog .article-photo-caption{font-size:12px}}
