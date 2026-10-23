@@ -24,7 +24,8 @@
   const key='onyria-background-music-v1';
   let saved={};
   try{saved=JSON.parse(sessionStorage.getItem(key)||'{}')||{};}catch{}
-  let wanted=saved.enabled!==false,started=false,request=0;
+  // Each page load starts silent; playback begins only from a music control.
+  let wanted=false,started=false,request=0;
   let volume=Number.isFinite(saved.volume)?Math.max(0,Math.min(1,saved.volume)):.25;
   let position=Number.isFinite(saved.position)?Math.max(0,saved.position):0;
   let trackIndex=Number.isInteger(saved.trackIndex)&&saved.trackIndex>=0&&saved.trackIndex<tracks.length?saved.trackIndex:0;
@@ -212,5 +213,4 @@
   window.addEventListener('pageshow',event=>{if(event.persisted&&started&&wanted)void play();});
   audio.addEventListener('timeupdate',()=>{if(!scrubbing&&pendingSeek===null)position=audio.currentTime;updateProgress();if(Math.floor(audio.currentTime)%5===0)save();});
   update();
-  if(saved.enabled===true)void play();
 })();
