@@ -106,7 +106,7 @@ window.initOnyriaPage = () => {
   const lightboxImage=document.getElementById('lightbox-image');
   const imageViewport=lightboxImage.parentElement;
   const zoomFactor=3;
-  let photoZoomed=false,suppressPhotoClickUntil=0,photoPanX=0,photoPanY=0,photoDrag=null;
+  let photoZoomed=false,suppressPhotoClickUntil=0,photoPanX=0,photoPanY=0,photoDrag=null,zoomBaseWidth=0,zoomBaseHeight=0;
   function sizePhotoViewport(){
     const stage=imageViewport.parentElement,style=getComputedStyle(stage),photo=viewerPhotos[currentIndex];
     const availableWidth=stage.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight);
@@ -125,7 +125,9 @@ window.initOnyriaPage = () => {
   }
   function resetPhotoZoom(){
     photoZoomed=false;endPhotoDrag();photoPanX=0;photoPanY=0;
-    sizePhotoViewport();imageViewport.classList.remove('is-zoomed');
+    imageViewport.classList.remove('is-zoomed');lightbox.classList.remove('is-photo-zoomed');
+    lightboxImage.style.width='';lightboxImage.style.height='';zoomBaseWidth=0;zoomBaseHeight=0;
+    sizePhotoViewport();
     lightboxImage.style.transform='none';lightboxImage.style.transformOrigin='0 0';
     lightboxImage.setAttribute('aria-pressed','false');
     lightboxImage.setAttribute('aria-label',`放大照片至${zoomFactor}倍：${lightboxImage.alt}`);
@@ -141,10 +143,13 @@ window.initOnyriaPage = () => {
   function togglePhotoZoom(x,y){
     if(photoZoomed){resetPhotoZoom();return;}
     const rect=imageViewport.getBoundingClientRect();
-    photoZoomed=true;
-    photoPanX=rect.width/2-(x-rect.left)*zoomFactor;
-    photoPanY=rect.height/2-(y-rect.top)*zoomFactor;
-    imageViewport.classList.add('is-zoomed');applyPhotoPan();setPhotoCursor('zoom-out');
+    photoZoomed=true;zoomBaseWidth=rect.width;zoomBaseHeight=rect.height;
+    lightboxImage.style.width=`${zoomBaseWidth}px`;lightboxImage.style.height=`${zoomBaseHeight}px`;
+    imageViewport.classList.add('is-zoomed');lightbox.classList.add('is-photo-zoomed');
+    const page=imageViewport.getBoundingClientRect();
+    photoPanX=page.width/2-(x-rect.left)*zoomFactor;
+    photoPanY=page.height/2-(y-rect.top)*zoomFactor;
+    applyPhotoPan();setPhotoCursor('zoom-out');
     lightboxImage.setAttribute('aria-pressed','true');
     lightboxImage.setAttribute('aria-label',`恢复照片原尺寸：${lightboxImage.alt}`);
     lightboxImage.title='按住拖动查看细节，点击恢复原尺寸';
@@ -164,8 +169,8 @@ window.initOnyriaPage = () => {
     imageViewport.classList.add('is-dragging');setPhotoCursor('grabbing');
     const rect=imageViewport.getBoundingClientRect();
     // Keep the photo in reach while allowing any edge to be centered for inspection.
-    photoPanX=Math.max(rect.width/2-rect.width*zoomFactor,Math.min(rect.width/2,drag.panX+dx));
-    photoPanY=Math.max(rect.height/2-rect.height*zoomFactor,Math.min(rect.height/2,drag.panY+dy));
+    photoPanX=Math.max(rect.width/2-zoomBaseWidth*zoomFactor,Math.min(rect.width/2,drag.panX+dx));
+    photoPanY=Math.max(rect.height/2-zoomBaseHeight*zoomFactor,Math.min(rect.height/2,drag.panY+dy));
     applyPhotoPan();
   });
   listen(imageViewport,'pointerup',event=>{
