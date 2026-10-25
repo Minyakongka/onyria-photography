@@ -103,9 +103,54 @@ window.initOnyriaPage = () => {
     const selected=strip.children[currentIndex];
     later(()=>{if(lightbox.open&&selected===strip.children[currentIndex])selected?.scrollIntoView?.({block:'nearest',inline:'center',behavior:'instant'});},0);
   }
+  const lightboxImage=document.getElementById('lightbox-image');
+  const imageViewport=lightboxImage.parentElement;
+  let photoZoomed=false,suppressPhotoClickUntil=0;
+  function resetPhotoZoom(){
+    photoZoomed=false;
+    lightboxImage.style.transform='none';
+    lightboxImage.style.transformOrigin='50% 50%';
+    lightboxImage.style.cursor='zoom-in';
+    lightboxImage.setAttribute('aria-pressed','false');
+    lightboxImage.setAttribute('aria-label',`放大照片至2倍：${lightboxImage.alt}`);
+    lightboxImage.title='点击以此处为中心放大至2倍';
+  }
+  function paintedPhotoBounds(){
+    const rect=lightboxImage.getBoundingClientRect(),viewport=imageViewport.getBoundingClientRect();
+    const width=lightboxImage.naturalWidth,height=lightboxImage.naturalHeight;
+    if(!width||!height)return null;
+    const scale=Math.min(rect.width/width,rect.height/height);
+    const left=rect.left+(rect.width-width*scale)/2,top=rect.top+(rect.height-height*scale)/2;
+    return {left:Math.max(left,viewport.left),right:Math.min(left+width*scale,viewport.right),top:Math.max(top,viewport.top),bottom:Math.min(top+height*scale,viewport.bottom)};
+  }
+  function overPhoto(x,y){
+    const bounds=paintedPhotoBounds();
+    return bounds&&x>=bounds.left&&x<=bounds.right&&y>=bounds.top&&y<=bounds.bottom;
+  }
+  function togglePhotoZoom(x,y){
+    if(photoZoomed){resetPhotoZoom();return;}
+    const rect=imageViewport.getBoundingClientRect();
+    photoZoomed=true;
+    lightboxImage.style.transformOrigin=`${x-rect.left}px ${y-rect.top}px`;
+    lightboxImage.style.transform='scale(2)';
+    lightboxImage.style.cursor='zoom-out';
+    lightboxImage.setAttribute('aria-pressed','true');
+    lightboxImage.setAttribute('aria-label',`恢复照片原尺寸：${lightboxImage.alt}`);
+    lightboxImage.title='点击恢复原尺寸';
+  }
+  listen(imageViewport,'pointermove',event=>{
+    lightboxImage.style.cursor=overPhoto(event.clientX,event.clientY)?(photoZoomed?'zoom-out':'zoom-in'):'default';
+  });
+  listen(lightboxImage,'keydown',event=>{
+    if(!['Enter',' '].includes(event.key))return;
+    event.preventDefault();
+    const rect=imageViewport.getBoundingClientRect();
+    togglePhotoZoom(rect.left+rect.width/2,rect.top+rect.height/2);
+  });
+  listen(window,'resize',resetPhotoZoom);
   function updateLightbox(){
     const photos=viewerPhotos,photo=photos[currentIndex],img=document.getElementById('lightbox-image');
-    img.src=photo.src;img.alt=photo.alt;
+    img.src=photo.src;img.alt=photo.alt;resetPhotoZoom();
     document.getElementById('lightbox-title').textContent=photo.title;
     document.getElementById('lightbox-category').textContent=photo.description;
     document.getElementById('lightbox-position').textContent=`${String(currentIndex+1).padStart(2,'0')} / ${String(photos.length).padStart(2,'0')}`;
@@ -164,6 +209,7 @@ window.initOnyriaPage = () => {
   listen(document.getElementById('photo-next'),'click',()=>step(1));
   listen(lightbox,'keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();step(-1);}if(e.key==='ArrowRight'){e.preventDefault();step(1);}});
   listen(lightbox,'close',()=>{
+    resetPhotoZoom();
     if(!articleDialog.open)document.body.classList.remove('modal-open');
     if(viewerOpener?.isConnected)viewerOpener.focus({preventScroll:true});
     viewerOpener=null;
@@ -182,19 +228,15 @@ window.initOnyriaPage = () => {
   },{passive:false});
   listen(lightbox,'click',event=>{
     if(event.target.closest?.('button,a,.lightbox-bar,.lightbox-caption,.lightbox-filmstrip'))return;
-    const img=document.getElementById('lightbox-image'),rect=img.getBoundingClientRect();
-    const width=img.naturalWidth||img.width,height=img.naturalHeight||img.height;
-    if(width&&height){
-      const scale=Math.min(rect.width/width,rect.height/height),paintedWidth=width*scale,paintedHeight=height*scale;
-      const left=rect.left+(rect.width-paintedWidth)/2,top=rect.top+(rect.height-paintedHeight)/2;
-      if(event.clientX>=left&&event.clientX<=left+paintedWidth&&event.clientY>=top&&event.clientY<=top+paintedHeight)return;
+    if(performance.now()<suppressPhotoClickUntil)return;
+    if(overPhoto(event.clientX,event.clientY)){
+      togglePhotoZoom(event.clientX,event.clientY);return;
     }
     lightbox.close();
   });
   let touchX=null,touchY=null;
-  const lightboxImage=document.getElementById('lightbox-image');
   listen(lightboxImage,'touchstart',e=>{touchX=e.changedTouches[0].clientX;touchY=e.changedTouches[0].clientY;},{passive:true});
-  listen(lightboxImage,'touchend',e=>{if(touchX===null)return;const dx=e.changedTouches[0].clientX-touchX,dy=e.changedTouches[0].clientY-touchY;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy))step(dx<0?1:-1);touchX=null;},{passive:true});
+  listen(lightboxImage,'touchend',e=>{if(touchX===null)return;const dx=e.changedTouches[0].clientX-touchX,dy=e.changedTouches[0].clientY-touchY;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)){suppressPhotoClickUntil=performance.now()+350;step(dx<0?1:-1);}touchX=null;},{passive:true});
   const journalTitleParts=article=>{
     const prefix=make('span','journal-prefix'),dot=make('span','journal-separator','·');
     dot.setAttribute('aria-hidden','true');
@@ -239,7 +281,7 @@ window.initOnyriaPage = () => {
         const photoButton=make('button','article-photo-button');photoButton.type='button';
         photoButton.setAttribute('aria-label',`放大查看：P${number}`);
         const photoIndex=articlePhotos.length;
-        articlePhotos.push({...photo,id:`${article.id}-photo-${number}`,title:`P${number}`,description:photo.caption||'',alt:img.alt,thumbnail:photo.src.replace('assets/journal/','https://onyria-photography.smokymaple16.chatgpt.site/assets/thumbnails/journal-')});
+        articlePhotos.push({...photo,id:`${article.id}-photo-${number}`,title:`P${number}`,description:photo.caption||'',alt:img.alt,thumbnail:photo.src.replace('assets/journal/','https://onyria-photography.smokymaple16.chatgpt.site/https://onyria-photography.smokymaple16.chatgpt.site/assets/thumbnails/journal-')});
         listen(photoButton,'click',()=>openLightbox(articlePhotos,photoIndex,photoButton));
         photoButton.append(img);figure.append(photoButton,caption);return figure;
       });
