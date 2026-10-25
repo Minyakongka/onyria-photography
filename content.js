@@ -565,6 +565,150 @@ const siteContent = {
           "alt": "龙门山脉令人惊叹的海拔落差"
         }
       ]
+    },
+    {
+      "id": "gongga-south-ridge",
+      "title": "贡嘎南坡山脊探线",
+      "tag": "贡嘎山 · 2026",
+      "kind": "徒步纪实",
+      "paragraphs": [
+        "26年8月，在英仙座流星雨来临之际我选择前往然洼沟拍摄贡嘎南坡，英仙座辐射点正好会掠过贡嘎主峰正上方。第一天坐民宿老板的车进入界碑石，身处群山之中仰望贡嘎南坡的高山。",
+        "到达然洼沟后从海拔2700m的沟底开始爬升，第一天钻林子的路很原始，很多地方路迹不清晰。",
+        "之后山上下起了阵雨，群山之中一片烟雨朦胧。",
+        "雨停之后出现了彩虹",
+        "晚上在4000m海拔处的牧屋里扎营，生火做饭烘干打湿的衣服和鞋子。",
+        "第二天把帐篷睡袋放在牧屋，带上摄影设备轻装上山脊4700m海拔位置，准备通宵拍摄流星雨，第三天早上拍摄蓝调和日照金山并下山。"
+      ],
+      "images": [
+        {
+          "afterParagraph": 1,
+          "src": "assets/journal/gongga-south-ridge-photo-01.jpg",
+          "width": 2048,
+          "height": 1366,
+          "caption": "",
+          "alt": "林间仰望贡嘎南坡群山"
+        },
+        {
+          "afterParagraph": 1,
+          "src": "assets/journal/gongga-south-ridge-photo-02.jpg",
+          "width": 2048,
+          "height": 1366,
+          "caption": "",
+          "alt": "山林间奔流的溪水"
+        },
+        {
+          "afterParagraph": 2,
+          "src": "assets/journal/gongga-south-ridge-photo-03.jpg",
+          "width": 2048,
+          "height": 1366,
+          "caption": "",
+          "alt": "然洼沟中的原始林间山路"
+        },
+        {
+          "afterParagraph": 3,
+          "src": "assets/journal/gongga-south-ridge-photo-04.jpg",
+          "width": 2048,
+          "height": 1366,
+          "caption": "",
+          "alt": "阵雨中烟雨朦胧的山谷"
+        },
+        {
+          "afterParagraph": 4,
+          "src": "assets/journal/gongga-south-ridge-photo-05.jpg",
+          "width": 2048,
+          "height": 1152,
+          "caption": "",
+          "alt": "云雾上空的彩虹"
+        },
+        {
+          "afterParagraph": 4,
+          "src": "assets/journal/gongga-south-ridge-photo-06.jpg",
+          "width": 2048,
+          "height": 1366,
+          "caption": "",
+          "alt": "云雾环绕的山峰"
+        },
+        {
+          "afterParagraph": 4,
+          "src": "assets/journal/gongga-south-ridge-photo-07.jpg",
+          "width": 2048,
+          "height": 1366,
+          "caption": "",
+          "alt": "雨后山谷中的彩虹"
+        },
+        {
+          "afterParagraph": 5,
+          "src": "assets/journal/gongga-south-ridge-photo-08.jpg",
+          "width": 1366,
+          "height": 2048,
+          "caption": "",
+          "alt": "牧屋内生火烘干衣物"
+        },
+        {
+          "afterParagraph": 5,
+          "src": "assets/journal/gongga-south-ridge-photo-09.jpg",
+          "width": 2048,
+          "height": 1366,
+          "caption": "",
+          "alt": "夜晚牧屋中的炉火"
+        },
+        {
+          "afterParagraph": 6,
+          "src": "assets/journal/gongga-south-ridge-photo-10.jpg",
+          "width": 2048,
+          "height": 1117,
+          "caption": "",
+          "alt": "山脊上远望贡嘎南坡群峰"
+        },
+        {
+          "afterParagraph": 6,
+          "src": "assets/journal/gongga-south-ridge-photo-11.jpg",
+          "width": 2048,
+          "height": 1366,
+          "caption": "",
+          "alt": "阳光照亮的高山草甸与群山"
+        },
+        {
+          "afterParagraph": 6,
+          "src": "assets/journal/gongga-south-ridge-photo-12.jpg",
+          "width": 2047,
+          "height": 1365,
+          "caption": "",
+          "alt": "草甸之后云雾中的雪峰"
+        },
+        {
+          "afterParagraph": 6,
+          "src": "assets/journal/gongga-south-ridge-photo-13.jpg",
+          "width": 2048,
+          "height": 1366,
+          "caption": "",
+          "alt": "山脊俯瞰云海与山谷"
+        },
+        {
+          "afterParagraph": 6,
+          "src": "assets/journal/gongga-south-ridge-photo-14.jpg",
+          "width": 2048,
+          "height": 1365,
+          "caption": "",
+          "alt": "蓝天下的雪山与流云"
+        },
+        {
+          "afterParagraph": 6,
+          "src": "assets/journal/gongga-south-ridge-photo-15.jpg",
+          "width": 2047,
+          "height": 665,
+          "caption": "",
+          "alt": "蓝调时刻的贡嘎群山全景"
+        },
+        {
+          "afterParagraph": 6,
+          "src": "assets/journal/gongga-south-ridge-photo-16.jpg",
+          "width": 2048,
+          "height": 1365,
+          "caption": "",
+          "alt": "晨光下的山峰与远处云海"
+        }
+      ]
     }
   ],
   "credits": []
