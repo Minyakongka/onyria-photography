@@ -585,7 +585,7 @@ const siteContent = {
           "src": "assets/journal/gongga-south-ridge-photo-01.jpg",
           "width": 2048,
           "height": 1366,
-          "caption": "",
+          "caption": "进入界碑石后的群山",
           "alt": "林间仰望贡嘎南坡群山"
         },
         {
@@ -593,7 +593,7 @@ const siteContent = {
           "src": "assets/journal/gongga-south-ridge-photo-02.jpg",
           "width": 2048,
           "height": 1366,
-          "caption": "",
+          "caption": "从巴王海流向草科乡的田湾河",
           "alt": "山林间奔流的溪水"
         },
         {
@@ -601,7 +601,7 @@ const siteContent = {
           "src": "assets/journal/gongga-south-ridge-photo-03.jpg",
           "width": 2048,
           "height": 1366,
-          "caption": "",
+          "caption": "不清晰的路迹",
           "alt": "然洼沟中的原始林间山路"
         },
         {
@@ -609,7 +609,7 @@ const siteContent = {
           "src": "assets/journal/gongga-south-ridge-photo-04.jpg",
           "width": 2048,
           "height": 1366,
-          "caption": "",
+          "caption": "行走在烟雨朦胧下的群山之中",
           "alt": "阵雨中烟雨朦胧的山谷"
         },
         {
@@ -633,7 +633,7 @@ const siteContent = {
           "src": "assets/journal/gongga-south-ridge-photo-07.jpg",
           "width": 2048,
           "height": 1366,
-          "caption": "",
+          "caption": "云雾散开出现的双圈彩虹",
           "alt": "雨后山谷中的彩虹"
         },
         {
@@ -641,7 +641,7 @@ const siteContent = {
           "src": "assets/journal/gongga-south-ridge-photo-08.jpg",
           "width": 1366,
           "height": 2048,
-          "caption": "",
+          "caption": "牧屋里生火",
           "alt": "牧屋内生火烘干衣物"
         },
         {
@@ -657,7 +657,7 @@ const siteContent = {
           "src": "assets/journal/gongga-south-ridge-photo-10.jpg",
           "width": 2048,
           "height": 1117,
-          "caption": "",
+          "caption": "山脊上遥望贡嘎南坡群峰",
           "alt": "山脊上远望贡嘎南坡群峰"
         },
         {
@@ -665,7 +665,7 @@ const siteContent = {
           "src": "assets/journal/gongga-south-ridge-photo-11.jpg",
           "width": 2048,
           "height": 1366,
-          "caption": "",
+          "caption": "俯瞰贡嘎南坡群山沟壑",
           "alt": "阳光照亮的高山草甸与群山"
         },
         {
@@ -673,7 +673,7 @@ const siteContent = {
           "src": "assets/journal/gongga-south-ridge-photo-12.jpg",
           "width": 2047,
           "height": 1365,
-          "caption": "",
+          "caption": "从山脊上耸立而出的仁宗雪山",
           "alt": "草甸之后云雾中的雪峰"
         },
         {
@@ -681,7 +681,7 @@ const siteContent = {
           "src": "assets/journal/gongga-south-ridge-photo-13.jpg",
           "width": 2048,
           "height": 1366,
-          "caption": "",
+          "caption": "从山脊俯瞰云层之上的牧屋",
           "alt": "山脊俯瞰云海与山谷"
         },
         {
@@ -689,7 +689,7 @@ const siteContent = {
           "src": "assets/journal/gongga-south-ridge-photo-14.jpg",
           "width": 2048,
           "height": 1365,
-          "caption": "",
+          "caption": "山脊上直面贡嘎、龙山、朱山",
           "alt": "蓝天下的雪山与流云"
         },
         {
@@ -697,7 +697,7 @@ const siteContent = {
           "src": "assets/journal/gongga-south-ridge-photo-15.jpg",
           "width": 2047,
           "height": 665,
-          "caption": "",
+          "caption": "无人机视角下的贡嘎南坡群峰",
           "alt": "蓝调时刻的贡嘎群山全景"
         },
         {
@@ -705,7 +705,7 @@ const siteContent = {
           "src": "assets/journal/gongga-south-ridge-photo-16.jpg",
           "width": 2048,
           "height": 1365,
-          "caption": "",
+          "caption": "维纳斯带下的然洼沟山脊",
           "alt": "晨光下的山峰与远处云海"
         }
       ]
