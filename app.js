@@ -105,7 +105,8 @@ window.initOnyriaPage = () => {
   }
   const lightboxImage=document.getElementById('lightbox-image');
   const imageViewport=lightboxImage.parentElement;
-  const zoomFactor=3;
+  const zoomMin=1.5,zoomMax=3;
+  let zoomFactor=zoomMin;
   let photoZoomed=false,suppressPhotoClickUntil=0,photoPanX=0,photoPanY=0,photoDrag=null,zoomBaseWidth=0,zoomBaseHeight=0;
   function sizePhotoViewport(){
     const stage=imageViewport.parentElement,style=getComputedStyle(stage),photo=viewerPhotos[currentIndex];
@@ -124,7 +125,7 @@ window.initOnyriaPage = () => {
     setPhotoCursor(photoZoomed?'zoom-out':'zoom-in');
   }
   function resetPhotoZoom(){
-    photoZoomed=false;endPhotoDrag();photoPanX=0;photoPanY=0;
+    photoZoomed=false;endPhotoDrag();photoPanX=0;photoPanY=0;zoomFactor=zoomMin;
     imageViewport.classList.remove('is-zoomed');lightbox.classList.remove('is-photo-zoomed');
     lightboxImage.style.width='';lightboxImage.style.height='';zoomBaseWidth=0;zoomBaseHeight=0;
     sizePhotoViewport();
@@ -151,8 +152,27 @@ window.initOnyriaPage = () => {
     photoPanY=page.height/2-(y-rect.top)*zoomFactor;
     applyPhotoPan();setPhotoCursor('zoom-out');
     lightboxImage.setAttribute('aria-pressed','true');
-    lightboxImage.setAttribute('aria-label',`恢复照片原尺寸：${lightboxImage.alt}`);
-    lightboxImage.title='按住拖动查看细节，点击恢复原尺寸';
+    updatePhotoZoomHint();
+  }
+  function updatePhotoZoomHint(){
+    const label=String(Number(zoomFactor.toFixed(2)));
+    lightboxImage.setAttribute('aria-label',`已放大${label}倍，点击恢复照片原尺寸：${lightboxImage.alt}`);
+    lightboxImage.title=`当前${label}倍：滚轮缩放，按住拖动，点击还原`;
+  }
+  function zoomPhotoTo(factor,x,y){
+    const next=Math.round(Math.max(zoomMin,Math.min(zoomMax,factor))*10000)/10000;
+    if(next===zoomFactor)return;
+    const page=imageViewport.getBoundingClientRect();
+    const pointerX=Number.isFinite(x)?x-page.left:page.width/2;
+    const pointerY=Number.isFinite(y)?y-page.top:page.height/2;
+    const ratio=next/zoomFactor;
+    photoPanX=pointerX-(pointerX-photoPanX)*ratio;
+    photoPanY=pointerY-(pointerY-photoPanY)*ratio;
+    zoomFactor=next;
+    photoPanX=Math.max(page.width/2-zoomBaseWidth*zoomFactor,Math.min(page.width/2,photoPanX));
+    photoPanY=Math.max(page.height/2-zoomBaseHeight*zoomFactor,Math.min(page.height/2,photoPanY));
+    if(photoDrag){photoDrag.panX=photoPanX;photoDrag.panY=photoPanY;photoDrag.x=x;photoDrag.y=y;}
+    applyPhotoPan();updatePhotoZoomHint();
   }
   listen(imageViewport,'pointerdown',event=>{
     if(!photoZoomed||event.button!==0||!event.isPrimary)return;
@@ -258,6 +278,12 @@ window.initOnyriaPage = () => {
   listen(lightbox,'wheel',event=>{
     if(event.ctrlKey)return;
     event.preventDefault();
+    if(photoZoomed){
+      const unit=event.deltaMode===1?16:event.deltaMode===2?window.innerHeight:1;
+      const pixels=Math.max(-100,Math.min(100,event.deltaY*unit));
+      zoomPhotoTo(zoomFactor-pixels*.0005,event.clientX,event.clientY);
+      return;
+    }
     const now=performance.now();
     if(now-lastStep<180)return;
     if(now-lastWheel>160)wheelAmount=0;
