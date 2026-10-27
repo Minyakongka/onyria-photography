@@ -281,7 +281,7 @@ window.initOnyriaPage = () => {
     if(photoZoomed){
       const unit=event.deltaMode===1?16:event.deltaMode===2?window.innerHeight:1;
       const pixels=Math.max(-100,Math.min(100,event.deltaY*unit));
-      zoomPhotoTo(zoomFactor-pixels*.0005,event.clientX,event.clientY);
+      zoomPhotoTo(zoomFactor-pixels*.0015,event.clientX,event.clientY);
       return;
     }
     const now=performance.now();
