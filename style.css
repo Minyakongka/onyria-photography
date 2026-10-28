@@ -86,7 +86,7 @@
 .documentary-list{display:flex;flex-direction:column;gap:56px}
 .documentary-card{width:100%;min-width:0}
 .documentary-media{position:relative;aspect-ratio:16 / 9;background:#000;overflow:hidden}
-.documentary-poster{position:absolute;inset:0;display:block;width:100%;height:100%;padding:0;background:#000}
+.documentary-poster{position:absolute;inset:0;z-index:1;display:block;width:100%;height:100%;padding:0;background:#000}
 .documentary-poster img{width:100%;height:100%;object-fit:contain}
 .documentary-poster[hidden],.documentary-player[hidden]{display:none!important}
 .documentary-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:12px;padding:18px 24px;background:#111211b8;border:1px solid #ffffff80;backdrop-filter:blur(6px);font-size:14px;letter-spacing:2px;transition:background .25s}
