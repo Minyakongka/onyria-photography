@@ -662,6 +662,38 @@ const siteContent = {
         },
         {
           "afterParagraph": 6,
+          "src": "assets/journal/gongga-south-ridge-extra-01.jpg",
+          "width": 2048,
+          "height": 1152,
+          "caption": "",
+          "alt": "山脊前方的群峰、雪山与流云"
+        },
+        {
+          "afterParagraph": 6,
+          "src": "assets/journal/gongga-south-ridge-extra-02.jpg",
+          "width": 2048,
+          "height": 1152,
+          "caption": "",
+          "alt": "阳光下的山脊与远处群峰"
+        },
+        {
+          "afterParagraph": 6,
+          "src": "assets/journal/gongga-south-ridge-extra-03.jpg",
+          "width": 2048,
+          "height": 1152,
+          "caption": "",
+          "alt": "草甸山脊与云雾环绕的山谷"
+        },
+        {
+          "afterParagraph": 6,
+          "src": "assets/journal/gongga-south-ridge-extra-04.jpg",
+          "width": 2048,
+          "height": 1152,
+          "caption": "",
+          "alt": "山脊草地上的背包与红色垫子"
+        },
+        {
+          "afterParagraph": 6,
           "src": "assets/journal/gongga-south-ridge-photo-11.jpg",
           "width": 2048,
           "height": 1366,
