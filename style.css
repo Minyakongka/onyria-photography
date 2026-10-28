@@ -191,9 +191,9 @@ body.is-page-turning .page-content{will-change:transform,filter;pointer-events:n
 .category-cover-copy{min-width:0;display:flex;flex-direction:column;gap:10px}
 .category-cover-name{font-family:var(--font-cn);font-weight:600;font-size:clamp(21px,1.8vw,30px);letter-spacing:.12em;line-height:1.55;color:#e5d5ae;overflow-wrap:anywhere}
 .category-cover-count{font-family:"Montserrat",var(--font-cn);font-size:11px;letter-spacing:.12em;color:#f2f0e9d9}
-.category-cover-hint{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:42px;height:42px;border:1px solid #e5d5ae70;border-radius:50%;color:#e5d5ae;transition:transform .3s,border-color .3s}
-.category-cover:focus-visible .category-cover-hint{border-color:#e5d5ae;transform:translate(2px,-2px)}
-@media(hover:hover) and (pointer:fine){.category-cover:hover .category-cover-hint{border-color:#e5d5ae;transform:translate(2px,-2px)}}
+.category-cover-hint{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:42px;height:42px;border:0;border-radius:0;color:#e5d5ae;transition:transform .3s}
+.category-cover:focus-visible .category-cover-hint{transform:translate(2px,-2px)}
+@media(hover:hover) and (pointer:fine){.category-cover:hover .category-cover-hint{transform:translate(2px,-2px)}}
 /* The film cover shares the same moderate rounding; its existing title is retained. */
 .documentary-media{border-radius:12px;overflow:hidden}
 .hero-image{transition:opacity .65s ease-in-out;opacity:1;will-change:opacity;transform:translateZ(0);backface-visibility:hidden}
