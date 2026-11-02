@@ -465,3 +465,8 @@ body.modal-open .scene-toggle{visibility:hidden}
 .collection-page .photo-folio{margin-top:5px;font-size:8px}
 @media(max-width:600px){.collection-page .gallery{gap:11px}.collection-page .gallery-spread{gap:8px}.hologram-border{inset:108px 10px 12px}.scene-hologram-label{left:14px;bottom:62px;font-size:9px}}
 @media(prefers-reduced-motion:reduce){#works .category-covers{transform:none;transition:none}.album-book{transition:none!important}.holographic-gallery,.hologram-scan,.projection-art:after{animation:none!important}}
+
+/* Route information beside the journal heading. */
+#journal .section-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:start}
+.journal-route-note{max-width:430px;margin-left:auto;font-family:var(--font-cn);font-size:12px;font-weight:400;line-height:1.9;letter-spacing:.025em;color:var(--muted);text-align:left}
+@media(max-width:900px){#journal .section-top{grid-template-columns:1fr;gap:18px}.journal-route-note{max-width:none;margin-left:0}}
