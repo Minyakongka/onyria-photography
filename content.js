@@ -223,6 +223,17 @@ const siteContent = {
       "height": 1023
     },
     {
+      "id": "onyria-landscape-dsc01392-a",
+      "src": "assets/onyria-landscape-dsc01392-a.jpg",
+      "title": "",
+      "category": "landscape",
+      "label": "云浮岳峙",
+      "alt": "深蓝天空下的雪峰与山间翻涌的流云",
+      "description": "",
+      "width": 2048,
+      "height": 1024
+    },
+    {
       "id": "onyria-dsc01023-v2",
       "src": "assets/onyria-dsc01023-v2.jpg",
       "title": "",
