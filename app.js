@@ -118,7 +118,7 @@ window.initOnyriaPage = () => {
   }
   const lightboxImage=document.getElementById('lightbox-image');
   const imageViewport=lightboxImage.parentElement;
-  const zoomMin=1.5,zoomMax=3;
+  const zoomMin=1,zoomMax=3;
   let zoomFactor=zoomMin;
   let photoZoomed=false,suppressPhotoClickUntil=0,photoPanX=0,photoPanY=0,photoDrag=null,zoomBaseWidth=0,zoomBaseHeight=0;
   function sizePhotoViewport(){
@@ -135,7 +135,7 @@ window.initOnyriaPage = () => {
     const drag=photoDrag;photoDrag=null;
     if(drag&&imageViewport.hasPointerCapture(drag.id))imageViewport.releasePointerCapture(drag.id);
     imageViewport.classList.remove('is-dragging');
-    setPhotoCursor(photoZoomed?'zoom-out':'zoom-in');
+    setPhotoCursor(photoZoomed?'grab':'default');
   }
   function resetPhotoZoom(){
     photoZoomed=false;endPhotoDrag();photoPanX=0;photoPanY=0;zoomFactor=zoomMin;
@@ -143,38 +143,35 @@ window.initOnyriaPage = () => {
     lightboxImage.style.width='';lightboxImage.style.height='';zoomBaseWidth=0;zoomBaseHeight=0;
     sizePhotoViewport();
     lightboxImage.style.transform='none';lightboxImage.style.transformOrigin='0 0';
-    lightboxImage.setAttribute('aria-pressed','false');
-    lightboxImage.setAttribute('aria-label',`放大照片至${zoomFactor}倍：${lightboxImage.alt}`);
-    lightboxImage.title=`点击放大至${zoomFactor}倍`;
+    lightboxImage.setAttribute('aria-label',`照片，滚轮缩放：${lightboxImage.alt}`);
+    lightboxImage.title='滚轮缩放，每次0.15倍';
   }
   function overPhoto(x,y){
-    const rect=imageViewport.getBoundingClientRect();
+    const rect=lightboxImage.getBoundingClientRect();
     return x>=rect.left&&x<=rect.right&&y>=rect.top&&y<=rect.bottom;
   }
   function applyPhotoPan(){
     lightboxImage.style.transform=`translate3d(${photoPanX}px, ${photoPanY}px, 0) scale(${zoomFactor})`;
   }
-  function togglePhotoZoom(x,y){
-    if(photoZoomed){resetPhotoZoom();return;}
+  function beginPhotoZoom(){
     const rect=imageViewport.getBoundingClientRect();
     photoZoomed=true;zoomBaseWidth=rect.width;zoomBaseHeight=rect.height;
     lightboxImage.style.width=`${zoomBaseWidth}px`;lightboxImage.style.height=`${zoomBaseHeight}px`;
     imageViewport.classList.add('is-zoomed');lightbox.classList.add('is-photo-zoomed');
     const page=imageViewport.getBoundingClientRect();
-    photoPanX=page.width/2-(x-rect.left)*zoomFactor;
-    photoPanY=page.height/2-(y-rect.top)*zoomFactor;
-    applyPhotoPan();setPhotoCursor('zoom-out');
-    lightboxImage.setAttribute('aria-pressed','true');
-    updatePhotoZoomHint();
+    photoPanX=rect.left-page.left;photoPanY=rect.top-page.top;
+    setPhotoCursor('grab');
   }
   function updatePhotoZoomHint(){
     const label=String(Number(zoomFactor.toFixed(2)));
-    lightboxImage.setAttribute('aria-label',`已放大${label}倍，点击恢复照片原尺寸：${lightboxImage.alt}`);
-    lightboxImage.title=`当前${label}倍：滚轮缩放，按住拖动，点击还原`;
+    lightboxImage.setAttribute('aria-label',`照片已放大${label}倍，滚轮缩放，按住拖动：${lightboxImage.alt}`);
+    lightboxImage.title=`当前${label}倍：滚轮缩放，按住拖动`;
   }
   function zoomPhotoTo(factor,x,y){
     const next=Math.round(Math.max(zoomMin,Math.min(zoomMax,factor))*10000)/10000;
+    if(next===zoomMin){resetPhotoZoom();return;}
     if(next===zoomFactor)return;
+    if(!photoZoomed)beginPhotoZoom();
     const page=imageViewport.getBoundingClientRect();
     const pointerX=Number.isFinite(x)?x-page.left:page.width/2;
     const pointerY=Number.isFinite(y)?y-page.top:page.height/2;
@@ -214,10 +211,10 @@ window.initOnyriaPage = () => {
   listen(imageViewport,'pointercancel',()=>{if(photoDrag)suppressPhotoClickUntil=performance.now()+350;endPhotoDrag();});
   listen(imageViewport,'lostpointercapture',()=>{if(photoDrag){suppressPhotoClickUntil=performance.now()+350;endPhotoDrag();}});
   listen(lightboxImage,'keydown',event=>{
-    if(!['Enter',' '].includes(event.key))return;
+    if(!['+','=','-','0'].includes(event.key))return;
     event.preventDefault();
-    const rect=imageViewport.getBoundingClientRect();
-    togglePhotoZoom(rect.left+rect.width/2,rect.top+rect.height/2);
+    if(event.key==='0'){resetPhotoZoom();return;}
+    zoomPhotoTo(zoomFactor+(event.key==='-'?-.15:.15));
   });
   listen(window,'resize',resetPhotoZoom);
   function updateLightbox(){
@@ -232,7 +229,6 @@ window.initOnyriaPage = () => {
   }
   function openLightbox(photos,index,button){
     viewerPhotos=photos;currentIndex=index;viewerOpener=button;
-    wheelAmount=0;lastWheel=0;lastStep=-Infinity;
     updateLightbox();lightbox.showModal();resetPhotoZoom();lock();
   }
   function step(direction){const n=viewerPhotos.length;if(!n)return;currentIndex=(currentIndex+direction+n)%n;updateLightbox();}
@@ -332,29 +328,17 @@ window.initOnyriaPage = () => {
     viewerOpener=null;
   });
   listen(lightbox,'cancel',event=>{event.preventDefault();lightbox.close();});
-  let wheelAmount=0,lastWheel=0,lastStep=-Infinity;
   listen(lightbox,'wheel',event=>{
     if(event.ctrlKey)return;
+    if(event.target.closest?.('.lightbox-filmstrip'))return;
     event.preventDefault();
-    if(photoZoomed){
-      const unit=event.deltaMode===1?16:event.deltaMode===2?window.innerHeight:1;
-      const pixels=Math.max(-100,Math.min(100,event.deltaY*unit));
-      zoomPhotoTo(zoomFactor-pixels*.0015,event.clientX,event.clientY);
-      return;
-    }
-    const now=performance.now();
-    if(now-lastStep<180)return;
-    if(now-lastWheel>160)wheelAmount=0;
-    const scale=event.deltaMode===1?16:event.deltaMode===2?window.innerHeight:1;
-    wheelAmount+=(Math.abs(event.deltaY)>=Math.abs(event.deltaX)?event.deltaY:event.deltaX)*scale;lastWheel=now;
-    if(Math.abs(wheelAmount)>=40){step(wheelAmount>0?1:-1);wheelAmount=0;lastStep=now;}
+    if(!event.deltaY)return;
+    zoomPhotoTo(zoomFactor-Math.sign(event.deltaY)*.15,event.clientX,event.clientY);
   },{passive:false});
   listen(lightbox,'click',event=>{
     if(event.target.closest?.('button,a,.lightbox-bar,.lightbox-caption,.lightbox-filmstrip'))return;
     if(performance.now()<suppressPhotoClickUntil)return;
-    if(overPhoto(event.clientX,event.clientY)){
-      togglePhotoZoom(event.clientX,event.clientY);return;
-    }
+    if(overPhoto(event.clientX,event.clientY))return;
     lightbox.close();
   });
   let touchX=null,touchY=null;
