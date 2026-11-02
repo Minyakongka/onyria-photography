@@ -50,7 +50,20 @@ window.initOnyriaPage = () => {
     if(!gallery)return;
     gallery.replaceChildren();
     const photos = filteredPhotos();
-    galleryLayout(photos,galleryViewport.matches).forEach(row => {
+    const splitOrientation=gallery.dataset.layout==='orientation-split';
+    let rows;
+    if(splitOrientation){
+      rows=[];
+      const indexed=photos.map((photo,index)=>({photo,index,ratio:aspectRatio(photo)}));
+      for(const portrait of [false,true]){
+        const group=make('div',`gallery-orientation ${portrait?'gallery-portraits':'gallery-landscapes'}`);
+        group.setAttribute('role','group');group.setAttribute('aria-label',portrait?'竖版照片':'横版照片');
+        gallery.append(group);
+        const items=indexed.filter(({photo})=>(photo.height>photo.width)===portrait);
+        for(let i=0;i<items.length;i+=2)rows.push({items:items.slice(i,i+2),parent:group});
+      }
+    }else rows=galleryLayout(photos,galleryViewport.matches).map(items=>({items,parent:gallery}));
+    rows.forEach(({items:row,parent}) => {
       const spread = make('div','gallery-spread');
       spread.setAttribute('role','group');
       row.forEach(({photo,index,ratio}) => {
@@ -74,7 +87,7 @@ window.initOnyriaPage = () => {
       folio.setAttribute('aria-hidden','true');figure.append(folio);
       spread.append(figure);
       });
-      gallery.append(spread);
+      parent.append(spread);
     });
     document.getElementById('photo-count').textContent=`${photos.length} 幅影像`;
     if(!photos.length)gallery.append(make('p','empty-message','这个分类暂时还没有作品。'));

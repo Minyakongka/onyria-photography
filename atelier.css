@@ -121,3 +121,12 @@
 
 .lightbox-image-viewport.is-zoomed:not(.is-dragging) #lightbox-image{transition:transform 90ms ease-out}
 @media(prefers-reduced-motion:reduce){.lightbox-image-viewport.is-zoomed #lightbox-image{transition:none}}
+
+/* A layout trial limited to the landscape album; originals stay uncropped. */
+.collection-page #gallery[data-layout="orientation-split"]{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:clamp(28px,4vw,64px);align-items:start}
+#gallery[data-layout="orientation-split"] .gallery-orientation{display:grid;gap:24px;min-width:0}
+#gallery[data-layout="orientation-split"] .gallery-spread{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+#gallery[data-layout="orientation-split"] .photo-image-button{aspect-ratio:3 / 2}
+#gallery[data-layout="orientation-split"] .gallery-portraits .photo-image-button{aspect-ratio:2 / 3}
+.collection-page #gallery[data-layout="orientation-split"] .photo-image-button img{width:100%;height:100%;aspect-ratio:auto;object-fit:cover;object-position:center}
+@media(max-width:700px){.collection-page #gallery[data-layout="orientation-split"]{grid-template-columns:1fr;gap:36px}#gallery[data-layout="orientation-split"] .gallery-orientation{gap:20px}#gallery[data-layout="orientation-split"] .gallery-spread{gap:10px}}
