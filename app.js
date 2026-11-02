@@ -164,8 +164,8 @@ window.initOnyriaPage = () => {
   }
   function updatePhotoZoomHint(){
     const label=String(Number(zoomFactor.toFixed(2)));
-    lightboxImage.setAttribute('aria-label',`照片已放大${label}倍，滚轮缩放，按住拖动：${lightboxImage.alt}`);
-    lightboxImage.title=`当前${label}倍：滚轮缩放，按住拖动`;
+    lightboxImage.setAttribute('aria-label',`照片已放大${label}倍，滚轮缩放，按住拖动，单击还原：${lightboxImage.alt}`);
+    lightboxImage.title=`当前${label}倍：滚轮缩放，按住拖动，单击还原`;
   }
   function zoomPhotoTo(factor,x,y){
     const next=Math.round(Math.max(zoomMin,Math.min(zoomMax,factor))*10000)/10000;
@@ -338,7 +338,10 @@ window.initOnyriaPage = () => {
   listen(lightbox,'click',event=>{
     if(event.target.closest?.('button,a,.lightbox-bar,.lightbox-caption,.lightbox-filmstrip'))return;
     if(performance.now()<suppressPhotoClickUntil)return;
-    if(overPhoto(event.clientX,event.clientY))return;
+    if(overPhoto(event.clientX,event.clientY)){
+      if(photoZoomed)resetPhotoZoom();
+      return;
+    }
     lightbox.close();
   });
   let touchX=null,touchY=null;
