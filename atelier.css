@@ -24,7 +24,7 @@
 
 
 /* Albums show only the photographs, at normal opacity and brightness. */
-.collection-page .collection-section{--bg:#fff;--surface:#f1f0eb;--text:#242620;--muted:#696b64;--line:#d9d9d2;--accent:#505c4d;background:var(--bg);color:var(--text);color-scheme:light}
+.collection-page,.collection-page .collection-section{--bg:#111211;--surface:#191a18;--text:#fff;--muted:#fff;--line:#ffffff26;--accent:#fff;background:var(--bg);color:var(--text);color-scheme:dark}
 .collection-page .header{background:var(--header-slate)}
 .collection-page .footer{background:#111211}
 .collection-page #gallery{border:0;outline:0;background:none;opacity:1;filter:none;transition:none}
@@ -33,10 +33,10 @@
 .collection-page .section-top{background:none;border:0;padding:18px 0;text-shadow:none}
 .collection-page .gallery-tools{background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:12px 0}
 .collection-page .section-top h2,.collection-page .collection-back{text-shadow:none}
-.collection-page .collection-back,.collection-page .filter,.collection-page #photo-count{color:#41473d}
-.collection-page .filter.active{color:#20261d;font-weight:600}
-.collection-page .filter.active:after{background:#414d3a}
-.collection-page .collection-back:hover,.collection-page .filter:hover,.collection-page .filter:focus-visible{color:#111711}
+.collection-page .collection-back,.collection-page .filter,.collection-page #photo-count,.collection-page .photo-folio,.collection-page .gallery-note,.collection-page .footer,.collection-page .footer a,.collection-page .footer-bottom{color:#fff}
+.collection-page .filter.active{color:#fff;font-weight:600}
+.collection-page .filter.active:after{background:#fff}
+.collection-page .collection-back:hover,.collection-page .filter:hover,.collection-page .filter:focus-visible{color:#fff}
 .music-next{display:flex;align-items:center;justify-content:center;width:30px;height:34px;border:0;border-radius:50%;padding:0;background:transparent;color:inherit;cursor:pointer}
 .music-next:hover,.music-next:focus-visible{background:#f2f0e912}
 @media(max-width:600px){.music-next{width:28px;height:32px}}
