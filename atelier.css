@@ -24,9 +24,9 @@
 
 
 /* Albums show only the photographs, at normal opacity and brightness. */
-.collection-page,.collection-page .collection-section{--bg:#111211;--surface:#191a18;--text:#fff;--muted:#fff;--line:#ffffff26;--accent:#fff;background:var(--bg);color:var(--text);color-scheme:dark}
+.collection-page,.collection-page .collection-section{--bg:#252629;--surface:#2e2f33;--text:#fff;--muted:#fff;--line:#ffffff26;--accent:#fff;background:var(--bg);color:var(--text);color-scheme:dark}
 .collection-page .header{background:var(--header-slate)}
-.collection-page .footer{background:#111211}
+.collection-page .footer{background:#252629}
 .collection-page #gallery{border:0;outline:0;background:none;opacity:1;filter:none;transition:none}
 .collection-page .gallery .photo-image-button img{opacity:1;filter:none}
 .collection-page .gallery .photo-image-button:hover img,.collection-page .gallery .photo-image-button:focus-visible img{opacity:1;filter:none}
